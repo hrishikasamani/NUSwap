@@ -30,6 +30,8 @@ class ViewController: UIViewController {
         
         loginScreen.buttonRegister.addTarget(self, action: #selector(onButtonClickRegisterTapped), for: .touchUpInside)
         
+        loginScreen.buttonJumpToItemDesc.addTarget(self, action: #selector(onButtonJumpToItemDescTapped), for: .touchUpInside)
+        
     }
     
     @objc func onButtonClickLoginTapped(){
@@ -63,6 +65,11 @@ class ViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         
         self.present(alert, animated: true)
+    }
+    
+    @objc func onButtonJumpToItemDescTapped() {
+        let itemDescVC = ItemDesciptionViewController()
+        self.navigationController?.pushViewController(itemDescVC, animated: true)
     }
 
 

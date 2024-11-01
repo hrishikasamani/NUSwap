@@ -16,6 +16,7 @@ class LoginView: UIView {
     var textFieldPassword: UITextField!
     var buttonLogin: UIButton!
     var buttonRegister: UIButton!
+    var buttonJumpToItemDesc: UIButton!
     
     
 
@@ -31,6 +32,7 @@ class LoginView: UIView {
         setupTextFieldPassword()
         setupButtonLogin()
         setupButtonRegister()
+        setupButtonJumpToItemDesc()
         
         initConstraints()
     }
@@ -92,6 +94,15 @@ class LoginView: UIView {
         contentWrapper.addSubview(buttonRegister)
     }
     
+    func setupButtonJumpToItemDesc(){
+        buttonJumpToItemDesc = UIButton(type: .system)
+        buttonJumpToItemDesc.setTitle("Jump to item desc page (delete later)", for: .normal)
+        buttonJumpToItemDesc.translatesAutoresizingMaskIntoConstraints = false
+        contentWrapper.addSubview(buttonJumpToItemDesc)
+    }
+    
+    
+    
     //MARK: initializing constraints...
     func initConstraints(){
         NSLayoutConstraint.activate([
@@ -107,45 +118,34 @@ class LoginView: UIView {
             
             textFieldEmail.topAnchor.constraint(equalTo: imageLogo.bottomAnchor, constant: 32),
             textFieldEmail.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
-            textFieldEmail.leadingAnchor.constraint(equalTo:contentWrapper.leadingAnchor, constant:
-            16),
-            textFieldEmail.trailingAnchor.constraint(equalTo:
-                                                        contentWrapper.trailingAnchor,
-            constant: -16),
+            textFieldEmail.leadingAnchor.constraint(equalTo:contentWrapper.leadingAnchor, constant: 16),
+            textFieldEmail.trailingAnchor.constraint(equalTo:contentWrapper.trailingAnchor, constant: -16),
             
             textFieldPassword.topAnchor.constraint(equalTo: textFieldEmail.bottomAnchor, constant: 16),
             textFieldPassword.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
-            textFieldPassword.leadingAnchor.constraint(equalTo:
-                                                        contentWrapper.leadingAnchor, constant:
-            16),
-            textFieldPassword.trailingAnchor.constraint(equalTo:
-                                                        contentWrapper.trailingAnchor,
+            textFieldPassword.leadingAnchor.constraint(equalTo:contentWrapper.leadingAnchor, constant:16),
+            textFieldPassword.trailingAnchor.constraint(equalTo:contentWrapper.trailingAnchor,
             constant: -16),
             
             
             buttonLogin.topAnchor.constraint(equalTo: textFieldPassword.bottomAnchor, constant: 16),
             buttonLogin.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
-            buttonLogin.leadingAnchor.constraint(equalTo:
-                                                        contentWrapper.leadingAnchor, constant:
-            16),
-            buttonLogin.trailingAnchor.constraint(equalTo:
-                                                            contentWrapper.trailingAnchor,
+            buttonLogin.leadingAnchor.constraint(equalTo:contentWrapper.leadingAnchor, constant: 16),
+            buttonLogin.trailingAnchor.constraint(equalTo:contentWrapper.trailingAnchor,
             constant: -16),
             
             buttonRegister.topAnchor.constraint(equalTo: buttonLogin.bottomAnchor, constant: 16),
             buttonRegister.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
-            buttonRegister.leadingAnchor.constraint(equalTo:
-                                                        contentWrapper.leadingAnchor, constant:
-            16),
-            buttonRegister.trailingAnchor.constraint(equalTo:
-                                                            contentWrapper.trailingAnchor,
+            buttonRegister.leadingAnchor.constraint(equalTo:contentWrapper.leadingAnchor, constant: 16),
+            buttonRegister.trailingAnchor.constraint(equalTo:contentWrapper.trailingAnchor,
             constant: -16),
-            buttonRegister.bottomAnchor.constraint(equalTo: contentWrapper.contentLayoutGuide.bottomAnchor)
-
-           
+            
+            buttonJumpToItemDesc.topAnchor.constraint(equalTo: buttonRegister.bottomAnchor, constant: 16),
+            buttonJumpToItemDesc.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
+            buttonJumpToItemDesc.bottomAnchor.constraint(equalTo: contentWrapper.contentLayoutGuide.bottomAnchor),
             
         ])
-        contentWrapper.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
+        contentWrapper.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
     }
     
     func configureTitleAppearance(navigationController: UINavigationController?) {
