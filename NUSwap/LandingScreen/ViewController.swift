@@ -1,17 +1,9 @@
-//
-//  ViewController.swift
-//  NUSwap
-//
-//  Created by Dhruv Doshi on 10/24/24.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
 
     let landingScreen = LoginView()
     
-        
     override func loadView() {
         view = landingScreen
     }
@@ -21,15 +13,16 @@ class ViewController: UIViewController {
         title = "NU Swap"
         
         landingScreen.buttonNavigate.addTarget(self, action: #selector(onButtonClickNavigate), for: .touchUpInside)
-        
     }
     
-    
-    @objc func onButtonClickNavigate(){
+    @objc func onButtonClickNavigate() {
+            // Create an instance of MainTabBarController
+            let tabBarController = MainTabBarController()
             
-            //push your new screen here...
-//            navigationController?.pushViewController(editProfileViewController, animated: true)
+            // Set the presentation style to full screen
+            tabBarController.modalPresentationStyle = .fullScreen
+            
+            // Present the MainTabBarController
+            present(tabBarController, animated: true, completion: nil)
         }
-        
 }
-
