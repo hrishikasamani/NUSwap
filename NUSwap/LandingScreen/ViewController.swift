@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  NUSwap
-//
-//  Created by Dhruv Doshi on 10/24/24.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
@@ -12,6 +5,7 @@ class ViewController: UIViewController {
     //MARK: initializing the First Screen View...
     let loginScreen = LoginView()
     
+
     let defaults = UserDefaults.standard
     
     //MARK: add the view to this controller while the view is loading...
@@ -23,8 +17,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+
+        
         
         title="Login"
+      
+        loginScreen.buttonNavigate.addTarget(self, action: #selector(onButtonClickNavigate), for: .touchUpInside)
         
         loginScreen.buttonLogin.addTarget(self, action: #selector(onButtonClickLoginTapped), for: .touchUpInside)
         
@@ -41,6 +39,18 @@ class ViewController: UIViewController {
         navigationController?.pushViewController(newListingViewController, animated: true)
     }
     
+
+    @objc func onButtonClickNavigate() {
+            // Create an instance of MainTabBarController
+            let tabBarController = MainTabBarController()
+            
+            // Set the presentation style to full screen
+            tabBarController.modalPresentationStyle = .fullScreen
+            
+            // Present the MainTabBarController
+            present(tabBarController, animated: true, completion: nil)
+    }
+
     @objc func onButtonClickLoginTapped(){
         
         // collect entered information
@@ -79,6 +89,4 @@ class ViewController: UIViewController {
         self.navigationController?.pushViewController(itemDescVC, animated: true)
     }
 
-
 }
-
