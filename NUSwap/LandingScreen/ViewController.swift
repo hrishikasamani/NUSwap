@@ -32,6 +32,13 @@ class ViewController: UIViewController {
         
         loginScreen.buttonJumpToItemDesc.addTarget(self, action: #selector(onButtonJumpToItemDescTapped), for: .touchUpInside)
         
+        loginScreen.addListing.addTarget(self, action: #selector(onButtonAddListingTapped), for: .touchUpInside)
+        
+    }
+    @objc func onButtonAddListingTapped(){
+        
+        let newListingViewController = NewListingViewController()
+        navigationController?.pushViewController(newListingViewController, animated: true)
     }
     
     @objc func onButtonClickLoginTapped(){
@@ -68,7 +75,7 @@ class ViewController: UIViewController {
     }
     
     @objc func onButtonJumpToItemDescTapped() {
-        let itemDescVC = ItemDesciptionViewController()
+        let itemDescVC = ItemDescriptionViewController()
         self.navigationController?.pushViewController(itemDescVC, animated: true)
     }
 

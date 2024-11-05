@@ -17,7 +17,7 @@ class LoginView: UIView {
     var buttonLogin: UIButton!
     var buttonRegister: UIButton!
     var buttonJumpToItemDesc: UIButton!
-    
+    var addListing: UIButton!
     
 
     
@@ -33,7 +33,7 @@ class LoginView: UIView {
         setupButtonLogin()
         setupButtonRegister()
         setupButtonJumpToItemDesc()
-        
+        setupAddListing()
         initConstraints()
     }
     
@@ -101,7 +101,12 @@ class LoginView: UIView {
         contentWrapper.addSubview(buttonJumpToItemDesc)
     }
     
-    
+    func setupAddListing(){
+        addListing = UIButton(type: .system)
+        addListing.setTitle("Add a new listing (delete later)", for: .normal)
+        addListing.translatesAutoresizingMaskIntoConstraints = false
+        contentWrapper.addSubview(addListing)
+    }
     
     //MARK: initializing constraints...
     func initConstraints(){
@@ -142,8 +147,11 @@ class LoginView: UIView {
             
             buttonJumpToItemDesc.topAnchor.constraint(equalTo: buttonRegister.bottomAnchor, constant: 16),
             buttonJumpToItemDesc.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
-            buttonJumpToItemDesc.bottomAnchor.constraint(equalTo: contentWrapper.contentLayoutGuide.bottomAnchor),
+            //buttonJumpToItemDesc.bottomAnchor.constraint(equalTo: contentWrapper.contentLayoutGuide.bottomAnchor),
             
+            addListing.topAnchor.constraint(equalTo: buttonJumpToItemDesc.bottomAnchor, constant: 16),
+            addListing.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
+            addListing.bottomAnchor.constraint(equalTo: contentWrapper.contentLayoutGuide.bottomAnchor),
         ])
         contentWrapper.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
     }
