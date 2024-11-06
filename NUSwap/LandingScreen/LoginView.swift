@@ -18,6 +18,7 @@ class LoginView: UIView {
     var buttonRegister: UIButton!
     var buttonJumpToItemDesc: UIButton!
     var addListing: UIButton!
+    var buttonNavigate: UIButton!
     
 
     
@@ -34,11 +35,9 @@ class LoginView: UIView {
         setupButtonRegister()
         setupButtonJumpToItemDesc()
         setupAddListing()
+        setupButtonNavigate()
         initConstraints()
     }
-    
-    
-    
     
     // MARK: set up UI elements
     func setupContentWrapper(){
@@ -108,6 +107,15 @@ class LoginView: UIView {
         contentWrapper.addSubview(addListing)
     }
     
+    func setupButtonNavigate(){
+        buttonNavigate = UIButton(type: .system)
+        buttonNavigate.isUserInteractionEnabled = true
+        buttonNavigate.translatesAutoresizingMaskIntoConstraints = false
+        buttonNavigate.setTitle("Navigate", for: .normal)
+        contentWrapper.addSubview(buttonNavigate)
+        }
+    
+    
     //MARK: initializing constraints...
     func initConstraints(){
         NSLayoutConstraint.activate([
@@ -151,7 +159,12 @@ class LoginView: UIView {
             
             addListing.topAnchor.constraint(equalTo: buttonJumpToItemDesc.bottomAnchor, constant: 16),
             addListing.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
-            addListing.bottomAnchor.constraint(equalTo: contentWrapper.contentLayoutGuide.bottomAnchor),
+            //addListing.bottomAnchor.constraint(equalTo: contentWrapper.contentLayoutGuide.bottomAnchor),
+            
+            buttonNavigate.topAnchor.constraint(equalTo: addListing.bottomAnchor, constant: 8),
+                        buttonNavigate.bottomAnchor.constraint(equalTo: contentWrapper.bottomAnchor, constant: -8),
+            buttonNavigate.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 8),
+            buttonNavigate.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor, constant: -8),
         ])
         contentWrapper.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
     }
