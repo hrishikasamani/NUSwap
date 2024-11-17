@@ -34,6 +34,7 @@ class ItemDescriptionView: UIView {
     var descriptionDivider: UIView!
     var descriptionLabel: UILabel!
     var descriptionDetailsLabel: UILabel!
+    var descriptionScrollView: UIScrollView!
     
     // section 5: place new bid or purchase
     var bidsHorizontalDivider: UIView!
@@ -180,13 +181,26 @@ class ItemDescriptionView: UIView {
     }
     
     func setupDescriptionDetailsLabel() {
+        // allows details label to be scrollable
+        descriptionScrollView = UIScrollView()
+        descriptionScrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentWrapper.addSubview(descriptionScrollView)
+        
         descriptionDetailsLabel = UILabel()
-        descriptionDetailsLabel.text = "Gives off warm, soft glow\nPerfect for cozy spaces\n80s vibes"
+        descriptionDetailsLabel.text = """
+                                        - 80s vibes
+                                        - Perfect for cozy spaces
+                                        - Gives off warm, soft glow
+                                        - Ideal for reading, relaxing or setting the mood for a quiet evening
+                                        - Great centerpiece of any living room, bedroom or study
+                                        - Add a touch of nostalgia with its aesthetic
+                                        """
         descriptionDetailsLabel.numberOfLines = 0
         descriptionDetailsLabel.lineBreakMode = .byWordWrapping
         descriptionDetailsLabel.font = UIFont.systemFont(ofSize: 16)
         descriptionDetailsLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentWrapper.addSubview(descriptionDetailsLabel)
+        descriptionScrollView.addSubview(descriptionDetailsLabel)
+
     }
     
     func setupBidsHorizontalDivider() {
@@ -290,11 +304,18 @@ class ItemDescriptionView: UIView {
             descriptionLabel.topAnchor.constraint(equalTo: descriptionDivider.bottomAnchor, constant: 10),
             descriptionLabel.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 20),
             
-            descriptionDetailsLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10),
-            descriptionDetailsLabel.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 20),
-            descriptionDetailsLabel.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor, constant: -20),
+            descriptionScrollView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10),
+            descriptionScrollView.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 20),
+            descriptionScrollView.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor, constant: -20),
+            descriptionScrollView.heightAnchor.constraint(equalToConstant: 100),
+
+            descriptionDetailsLabel.topAnchor.constraint(equalTo: descriptionScrollView.topAnchor),
+            descriptionDetailsLabel.leadingAnchor.constraint(equalTo: descriptionScrollView.leadingAnchor),
+            descriptionDetailsLabel.trailingAnchor.constraint(equalTo: descriptionScrollView.trailingAnchor),
+            descriptionDetailsLabel.bottomAnchor.constraint(equalTo: descriptionScrollView.bottomAnchor),
+            descriptionDetailsLabel.widthAnchor.constraint(equalTo: descriptionScrollView.widthAnchor),
             
-            bidsHorizontalDivider.topAnchor.constraint(equalTo: descriptionDetailsLabel.bottomAnchor, constant: 20),
+            bidsHorizontalDivider.topAnchor.constraint(equalTo: descriptionScrollView.bottomAnchor, constant: 20),
             bidsHorizontalDivider.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 10),
             bidsHorizontalDivider.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor, constant: -10),
             bidsHorizontalDivider.heightAnchor.constraint(equalToConstant: 1),
