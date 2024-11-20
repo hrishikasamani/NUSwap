@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         
         title="Login"
       
-        loginScreen.buttonNavigate.addTarget(self, action: #selector(onButtonClickNavigate), for: .touchUpInside)
+        //loginScreen.buttonNavigate.addTarget(self, action: #selector(onButtonClickNavigate), for: .touchUpInside)
         
         loginScreen.buttonLogin.addTarget(self, action: #selector(onButtonClickLoginTapped), for: .touchUpInside)
         
