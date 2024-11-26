@@ -16,6 +16,12 @@ class HomePageViewController: UIViewController {
     var items: [ItemStruct] = []
     let database = Firestore.firestore()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        navigationController?.navigationBar.prefersLargeTitles = true
+        fetchListings()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
@@ -108,7 +114,7 @@ class HomePageViewController: UIViewController {
         itemLocationLabel.textColor = .black
         
         let itemPriceLabel = UILabel()
-        itemPriceLabel.text = "$\(item.basePrice)"
+        itemPriceLabel.text = "Top bid: $\(item.topBid ?? 0)"
         itemPriceLabel.font = UIFont.systemFont(ofSize: 16)
         
         let itemSealPriceLabel = UILabel()
@@ -189,7 +195,7 @@ class HomePageViewController: UIViewController {
             self.items = documents.compactMap { document in
                 let data = document.data()
                 
-                // Exclude listings created by the current user
+                // Exclude listings created by the current user and listings with a non-nil buyerUserId
                 guard let sellerUserId = data["sellerUserId"] as? String,
                       sellerUserId != currentUserEmail,
                       let name = data["name"] as? String,
@@ -197,17 +203,18 @@ class HomePageViewController: UIViewController {
                       let location = data["location"] as? String,
                       let description = data["description"] as? String,
                       let basePrice = data["basePrice"] as? Double,
-                      let sealTheDealPrice = data["sealTheDealPrice"] as? Double else {
+                      let sealTheDealPrice = data["sealTheDealPrice"] as? Double,
+                      data["buyerUserId"] == nil else {
                     return nil
                 }
                 
-                let buyerUserId = data["buyerUserId"] as? String
-                let topBid = data["topBid"] as? Double
+                let topBid = (data["topBidPrice"] as? Double) ?? basePrice
                 
                 return ItemStruct(
+                    itemId: document.documentID,
                     name: name,
                     sellerUserId: sellerUserId,
-                    buyerUserId: buyerUserId,
+                    buyerUserId: nil,
                     category: category,
                     location: location,
                     description: description,
@@ -222,6 +229,7 @@ class HomePageViewController: UIViewController {
             }
         }
     }
+
 
 
 }

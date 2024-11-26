@@ -8,6 +8,7 @@
 import Foundation
 
 struct ItemStruct: Codable {
+    var itemId: String
     var name: String
     var sellerUserId: String
     var buyerUserId: String? // default as optional bc item not yet purchased
@@ -19,6 +20,7 @@ struct ItemStruct: Codable {
     var topBid: Double?     // default as optional bc item no new bid yet
     
     init(
+        itemId: String = "missing",
         name: String = "error",
         sellerUserId: String = "error",
         buyerUserId: String? = nil,
@@ -30,6 +32,7 @@ struct ItemStruct: Codable {
         topBid: Double? = nil
 
     ) {
+        self.itemId = itemId
         self.name = name
         self.sellerUserId = sellerUserId
         self.buyerUserId = buyerUserId
