@@ -194,6 +194,7 @@ class HomePageViewController: UIViewController {
 
             self.items = documents.compactMap { document in
                 let data = document.data()
+                let itemId = document.documentID
                 
                 // Exclude listings created by the current user and listings with a non-nil buyerUserId
                 guard let sellerUserId = data["sellerUserId"] as? String,
@@ -211,7 +212,7 @@ class HomePageViewController: UIViewController {
                 let topBid = (data["topBidPrice"] as? Double) ?? basePrice
                 
                 return ItemStruct(
-                    itemId: document.documentID,
+                    itemId: itemId,
                     name: name,
                     sellerUserId: sellerUserId,
                     buyerUserId: nil,

@@ -46,6 +46,7 @@ struct FirebaseItemCommands {
 
             let items: [ItemStruct] = documents.compactMap { document in
                 let data = document.data()
+                let itemId = document.documentID
                 guard
                     let name = data["name"] as? String,
                     let sellerUserId = data["sellerUserId"] as? String,
@@ -62,6 +63,7 @@ struct FirebaseItemCommands {
                 let topBid = data["topBid"] as? Double
 
                 return ItemStruct(
+                    itemId: itemId,
                     name: name,
                     sellerUserId: sellerUserId,
                     buyerUserId: buyerUserId,
@@ -93,6 +95,7 @@ struct FirebaseItemCommands {
 
             let items: [ItemStruct] = documents.compactMap { document in
                 let data = document.data()
+                let itemId = document.documentID
                 guard
                     let name = data["name"] as? String,
                     let sellerUserId = data["sellerUserId"] as? String,
@@ -109,6 +112,7 @@ struct FirebaseItemCommands {
                 let topBid = data["topBid"] as? Double
 
                 return ItemStruct(
+                    itemId: itemId,
                     name: name,
                     sellerUserId: sellerUserId,
                     buyerUserId: buyerUserId,
