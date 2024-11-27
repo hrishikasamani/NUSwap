@@ -45,7 +45,7 @@ class BiddingsViewController: UIViewController {
             return
         }
 
-        FirebaseItemCommands.fetchBiddedItems(userEmail: userEmail) { result in
+        BiddingsFirebaseManager.fetchBiddedItems(userEmail: userEmail) { result in
             switch result {
             case .success(let items):
                 print("Before fetch: \(self.biddedItems)")
@@ -65,7 +65,7 @@ class BiddingsViewController: UIViewController {
         guard let itemId = notification.object as? String else { return }
         print("Received itemId: \(itemId)")
         
-        FirebaseItemCommands.fetchItemDetails(itemId: itemId) { result in
+        BiddingsFirebaseManager.fetchItemDetails(itemId: itemId) { result in
             switch result {
             case .success(let newItem):
                 if !self.biddedItems.contains(where: { $0.itemId == newItem.itemId }) {

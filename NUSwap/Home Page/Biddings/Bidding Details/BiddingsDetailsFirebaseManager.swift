@@ -61,7 +61,4 @@ extension BiddingsDetailViewController{
             }
         }
     }
-
-
-    
 }

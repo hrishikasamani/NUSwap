@@ -209,7 +209,7 @@ class HomePageViewController: UIViewController {
                         return nil
                     }
                     
-                    let topBid = (data["topBidPrice"] as? Double) ?? basePrice
+                    let topBid = (data["topBid"] as? Double) ?? basePrice
                     
                     return ItemStruct(
                         itemId: itemId,
