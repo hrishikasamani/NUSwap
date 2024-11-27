@@ -176,62 +176,60 @@ class HomePageViewController: UIViewController {
     }
 
     func fetchListings() {
-        guard let currentUserEmail = Auth.auth().currentUser?.email else {
-            print("User not found")
-            return
-        }
-
-        database.collection("items").getDocuments { (snapshot, error) in
-            if let error = error {
-                print("Error fetching listings: \(error.localizedDescription)")
+            guard let currentUserEmail = Auth.auth().currentUser?.email else {
+                print("User not found")
                 return
             }
 
-            guard let documents = snapshot?.documents else {
-                print("No listings found")
-                return
-            }
-
-            self.items = documents.compactMap { document in
-                let data = document.data()
-                let itemId = document.documentID
-                
-                // Exclude listings created by the current user and listings with a non-nil buyerUserId
-                guard let sellerUserId = data["sellerUserId"] as? String,
-                      sellerUserId != currentUserEmail,
-                      let name = data["name"] as? String,
-                      let category = data["category"] as? String,
-                      let location = data["location"] as? String,
-                      let description = data["description"] as? String,
-                      let basePrice = data["basePrice"] as? Double,
-                      let sealTheDealPrice = data["sealTheDealPrice"] as? Double
-//                      data["buyerUserId"] == nil
-                else {
-                    return nil
+            database.collection("items").getDocuments { (snapshot, error) in
+                if let error = error {
+                    print("Error fetching listings: \(error.localizedDescription)")
+                    return
                 }
-                
-                let topBid = (data["topBid"] as? Double) ?? basePrice
-                let buyerUserId = (data["buyerUserId"] as? String)
-                
-                return ItemStruct(
-                    itemId: itemId,
-                    name: name,
-                    sellerUserId: sellerUserId,
-                    buyerUserId: buyerUserId,
-                    category: category,
-                    location: location,
-                    description: description,
-                    basePrice: basePrice,
-                    sealTheDealPrice: sealTheDealPrice,
-                    topBid: topBid
-                )
-            }
 
-            DispatchQueue.main.async {
-                self.setupItemsInScrollView()
+                guard let documents = snapshot?.documents else {
+                    print("No listings found")
+                    return
+                }
+
+                self.items = documents.compactMap { document in
+                    let data = document.data()
+                    let itemId = document.documentID
+                    
+                    // Exclude listings created by the current user and listings with a non-nil buyerUserId
+                    guard let sellerUserId = data["sellerUserId"] as? String,
+                          sellerUserId != currentUserEmail,
+                          let name = data["name"] as? String,
+                          let category = data["category"] as? String,
+                          let location = data["location"] as? String,
+                          let description = data["description"] as? String,
+                          let basePrice = data["basePrice"] as? Double,
+                          let sealTheDealPrice = data["sealTheDealPrice"] as? Double,
+                          data["buyerUserId"] == nil else {
+                        return nil
+                    }
+                    
+                    let topBid = (data["topBidPrice"] as? Double) ?? basePrice
+                    
+                    return ItemStruct(
+                        itemId: itemId,
+                        name: name,
+                        sellerUserId: sellerUserId,
+                        buyerUserId: nil,
+                        category: category,
+                        location: location,
+                        description: description,
+                        basePrice: basePrice,
+                        sealTheDealPrice: sealTheDealPrice,
+                        topBid: topBid
+                    )
+                }
+
+                DispatchQueue.main.async {
+                    self.setupItemsInScrollView()
+                }
             }
         }
-    }
 
 
 

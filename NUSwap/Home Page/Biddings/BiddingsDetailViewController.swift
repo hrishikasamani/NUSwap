@@ -54,7 +54,7 @@ class BiddingsDetailViewController: UIViewController {
                 NotificationCenter.default.post(name: NSNotification.Name("NewBiddingAdded"), object: updatedItem.itemId)
             }
             
-            navigateToBiddingsViewController()
+            //navigateToBiddingsViewController()
         }
         else {
             showErrorAlert(message: "Invalid bid amount.")
@@ -82,7 +82,7 @@ class BiddingsDetailViewController: UIViewController {
     // MARK: - Seal the Deal funtionality
     @objc func sealTheDealAction() {
         sealTheDealForItem(documentID: item?.itemId ?? "missing", userId: Auth.auth().currentUser?.email ?? "missing")
-        navigateToBiddingsViewController()
+        //navigateToBiddingsViewController()
     }
     
     func sealTheDealOnScreen(){

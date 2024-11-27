@@ -21,14 +21,14 @@ class MainTabBarController: UITabBarController {
 
         // Initialize BiddingsViewController and embed it in a UINavigationController
         let biddingsVC = BiddingsViewController()
-        biddingsVC.title = "Biddings"
-        biddingsVC.tabBarItem = UITabBarItem(title: "Biddings", image: UIImage(systemName: "list.bullet"), tag: 1)
+        biddingsVC.title = "My Biddings"
+        biddingsVC.tabBarItem = UITabBarItem(title: "My Biddings", image: UIImage(systemName: "list.bullet"), tag: 1)
         let biddingsNavController = UINavigationController(rootViewController: biddingsVC)
 
         // Initialize ListingsViewController and embed it in a UINavigationController
         let listingsVC = ListingsViewController()
-        listingsVC.title = "Listings"
-        listingsVC.tabBarItem = UITabBarItem(title: "Listings", image: UIImage(systemName: "tag"), tag: 2)
+        listingsVC.title = "My Listings"
+        listingsVC.tabBarItem = UITabBarItem(title: "My Listings", image: UIImage(systemName: "tag"), tag: 2)
         let listingsNavController = UINavigationController(rootViewController: listingsVC)
 
         // Initialize ProfileViewController and embed it in a UINavigationController

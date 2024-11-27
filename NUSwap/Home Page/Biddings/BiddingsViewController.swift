@@ -23,7 +23,7 @@ class BiddingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Biddings"
+        title = "My Biddings"
         view.backgroundColor = .white
         fetchUserBiddings()
         

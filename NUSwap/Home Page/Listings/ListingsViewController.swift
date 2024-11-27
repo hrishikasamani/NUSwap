@@ -19,7 +19,7 @@ class ListingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Listings"
+        title = "My Listings"
         view.backgroundColor = .white
         fetchUserListings()
         

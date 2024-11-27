@@ -22,7 +22,7 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         //hideKeyboardWhenTappedAround()
         
-        title = "My Profile"
+        title = "Profile"
         
         // Add Logout button in the navigation bar
         navigationItem.rightBarButtonItem = UIBarButtonItem(
