@@ -12,6 +12,7 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
         // Initialize HomePageViewController and embed it in a UINavigationController
         let homeVC = HomePageViewController()
         homeVC.title = "Home"

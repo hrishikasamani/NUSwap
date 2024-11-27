@@ -2,21 +2,21 @@
 //  ItemDescriptionFirebaseManager.swift
 //  NUSwap
 //
-//  Created by Dhruv Doshi on 11/25/24.
+//  Created by Hrishika Samani on 11/27/24.
 //
 
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 
-extension ItemDescriptionViewController{
+extension BiddingsDetailViewController{
     
     func updateBasePriceForItem(documentID: String, newBidPrice: Double) {
         let database = Firestore.firestore()
         let itemRef = database.collection("items").document(documentID)
         
         // Updating the basePrice field
-        itemRef.updateData(["topBidPrice": newBidPrice]) { error in
+        itemRef.updateData(["topBid": newBidPrice]) { error in
             if let error = error {
                 print("Failed to update basePrice for document \(documentID): \(error.localizedDescription)")
             } else {
@@ -33,7 +33,7 @@ extension ItemDescriptionViewController{
         let itemBiddingRef = database.collection("items").document(documentID).collection("bids")
         
         let bidData: [String: Any] = [
-            "userId": userId,
+            "buyerUserId": userId,
             "bidAmount": newBidPrice,
             "timestamp": Timestamp()
         ]

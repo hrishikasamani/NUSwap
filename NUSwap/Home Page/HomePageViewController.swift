@@ -170,9 +170,9 @@ class HomePageViewController: UIViewController {
         guard let tag = sender.view?.tag else { return }
         let selectedItem = items[tag]
         
-        let itemDescriptionVC = ItemDescriptionViewController()
-        itemDescriptionVC.item = selectedItem // Pass the selected item
-        navigationController?.pushViewController(itemDescriptionVC, animated: true)
+        let biddingDetailsVC = BiddingsDetailViewController()
+        biddingDetailsVC.item = selectedItem // Pass the selected item
+        navigationController?.pushViewController(biddingDetailsVC, animated: true)
     }
 
     func fetchListings() {
@@ -204,18 +204,20 @@ class HomePageViewController: UIViewController {
                       let location = data["location"] as? String,
                       let description = data["description"] as? String,
                       let basePrice = data["basePrice"] as? Double,
-                      let sealTheDealPrice = data["sealTheDealPrice"] as? Double,
-                      data["buyerUserId"] == nil else {
+                      let sealTheDealPrice = data["sealTheDealPrice"] as? Double
+//                      data["buyerUserId"] == nil
+                else {
                     return nil
                 }
                 
-                let topBid = (data["topBidPrice"] as? Double) ?? basePrice
+                let topBid = (data["topBid"] as? Double) ?? basePrice
+                let buyerUserId = (data["buyerUserId"] as? String)
                 
                 return ItemStruct(
                     itemId: itemId,
                     name: name,
                     sellerUserId: sellerUserId,
-                    buyerUserId: nil,
+                    buyerUserId: buyerUserId,
                     category: category,
                     location: location,
                     description: description,

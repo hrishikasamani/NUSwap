@@ -1,14 +1,14 @@
 //
-//  ItemDescriptionView.swift
+//  BiddingsDetailView.swift
 //  NUSwap
 //
-//  Created by Karyn T on 10/27/24.
+//  Created by Hrishika Samani on 11/27/24.
 //
 
 import UIKit
 
-class ItemDescriptionView: UIView {
-    
+class BiddingsDetailView: UIView {
+
     // section 1: title & image
     var contentWrapper: UIScrollView!
     var itemNameLabel: UILabel!
@@ -42,7 +42,7 @@ class ItemDescriptionView: UIView {
     var placeBidButton: UIButton!
     var bidInputStackView: UIStackView!
     var sealDealButton: UIButton!
-    
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -339,3 +339,4 @@ class ItemDescriptionView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+

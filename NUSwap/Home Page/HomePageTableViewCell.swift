@@ -56,7 +56,15 @@ class HomePageTableViewCell: UITableViewCell {
     func configure(with item: ItemStruct) {
         itemNameLabel.text = item.name
         itemLocationLabel.text = item.location
-        itemPriceLabel.text = "$\(item.basePrice)" // Use basePrice instead of currentBid
+        
+        // Check if topBid exists, if not use basePrice
+        if let topBid = item.topBid {
+            itemPriceLabel.text = "$\(topBid)"  // Display topBid if available
+        } else {
+            itemPriceLabel.text = "$\(item.basePrice)"  // Otherwise, display basePrice
+        }
+        
+        //itemPriceLabel.text = "$\(item.basePrice)" // Use basePrice instead of currentBid
         itemSealPriceLabel.text = "Seal: $\(item.sealTheDealPrice)" // Use sealTheDealPrice instead of sealPrice
         itemDescriptionLabel.text = item.description
         itemImageView.image = UIImage(systemName: "photo") // Placeholder image
