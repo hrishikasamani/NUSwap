@@ -1,5 +1,5 @@
 //
-//  DisplayProfileView.swift
+//  ProfileView.swift
 //  WA4_Doshi_6855
 //
 //  Created by Dhruv Doshi on 10/3/24.
@@ -7,24 +7,12 @@
 
 import UIKit
 
-class DisplayProfileView: UIView {
-
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+class ProfileView: UIView {
     
     var contentWrapper:UIScrollView!
     var labelName: UILabel!
     var labelEmail: UILabel!
     var labelPhone: UILabel!
-    
-    
-
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -73,7 +61,6 @@ class DisplayProfileView: UIView {
             contentWrapper.widthAnchor.constraint(equalTo:self.safeAreaLayoutGuide.widthAnchor),
             contentWrapper.heightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.heightAnchor),
             
-            
             // labelName constraints
             labelName.topAnchor.constraint(equalTo: contentWrapper.topAnchor, constant: 32),
             labelName.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
@@ -89,8 +76,6 @@ class DisplayProfileView: UIView {
             labelPhone.topAnchor.constraint(equalTo: labelEmail.bottomAnchor, constant: 16),
             labelPhone.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
             labelPhone.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 16),
-            
-            
         ])
     }
     required init?(coder: NSCoder) {

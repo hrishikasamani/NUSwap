@@ -28,6 +28,12 @@ class ListingsViewController: UIViewController {
         
         // Observe new listing notifications
         NotificationCenter.default.addObserver(self, selector: #selector(handleNewListingNotification(_:)), name: NSNotification.Name("NewListingAdded"), object: nil)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(addNewListing)
+        )
     }
     
     // re-fetches data whenever view reloads
@@ -35,7 +41,12 @@ class ListingsViewController: UIViewController {
             super.viewWillAppear(animated)
             fetchUserListings()
         }
-
+    
+    @objc func addNewListing() {
+        let newListingVC = NewListingViewController()
+        navigationController?.pushViewController(newListingVC, animated: true)
+    }
+    
     @objc func fetchUserListings() {
         guard let currentUser = Auth.auth().currentUser else {
             print("User not logged in")
@@ -48,6 +59,7 @@ class ListingsViewController: UIViewController {
                 self.listedItems = items
                 DispatchQueue.main.async {
                     self.ListingsScreen.tableViewListings.reloadData()
+                    self.updateEmptyList()
                 }
             case .failure(let error):
                 print("Failed to fetch user listings: \(error.localizedDescription)")
@@ -64,5 +76,11 @@ class ListingsViewController: UIViewController {
             }
         }
     }
+    
+    func updateEmptyList() {
+        ListingsScreen.emptyListLabel.isHidden = !listedItems.isEmpty
+        ListingsScreen.tableViewListings.isHidden = listedItems.isEmpty
+    }
+
 }
 

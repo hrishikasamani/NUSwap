@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class NewListingViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class NewListingViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var newListingScreen = NewListingView()
     var selectedType = "Electronics"
@@ -23,12 +23,10 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        
         // Set delegates
         newListingScreen.detailsTextField.delegate = self
         newListingScreen.categoryPickerView.dataSource = self
         newListingScreen.categoryPickerView.delegate = self
-        // delegate for description box
         newListingScreen.detailsTextField.delegate = self
         
         // Button actions
@@ -39,23 +37,62 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboardOnTap))
         tapRecognizer.cancelsTouchesInView = false
         view.addGestureRecognizer(tapRecognizer)
+        
+        // keyboard notification observers
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    deinit {
+        // remove observers
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    // make sure keyboard doesn't cover text fields
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        let keyboardHeight = keyboardFrame.height
+        let extraPadding: CGFloat = 20
+        let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight + extraPadding, right: 0)
+        newListingScreen.scrollView.contentInset = contentInset
+        newListingScreen.scrollView.scrollIndicatorInsets = contentInset
     }
 
-    // when the user starts editing description
-        @objc func textViewDidBeginEditing(_ textView: UITextView) {
-            if textView.text == "Enter detailed description here..." {
-                textView.text = ""
-                textView.textColor = .black
-            }
-        }
+    @objc func keyboardWillHide(_ notification: Notification) {
+        let contentInset = UIEdgeInsets.zero
+        newListingScreen.scrollView.contentInset = contentInset
+        newListingScreen.scrollView.scrollIndicatorInsets = contentInset
+    }
+    
+    private func scrollToView(view: UIView) {
+        guard let scrollView = newListingScreen.scrollView else { return }
+        let frame = view.convert(view.bounds, to: scrollView)
+        scrollView.scrollRectToVisible(frame, animated: true)
+    }
 
-        // when description box is blank
-        @objc func textViewDidEndEditing(_ textView: UITextView) {
-            if textView.text.isEmpty {
-                textView.text = "Enter detailed description here..."
-                textView.textColor = .lightGray
-            }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        scrollToView(view: textField)
+    }
+    
+    // when user types in description box
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        scrollToView(view: textView)
+        if textView.text == "Enter detailed description here..." {
+            textView.text = ""
+            textView.textColor = .black
         }
+    }
+
+    // when description box is blank
+    @objc func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "Enter detailed description here..."
+            textView.textColor = .lightGray
+        }
+    }
 
     // MARK: - Show Photo Options
     @objc func showPhotoOptions() {

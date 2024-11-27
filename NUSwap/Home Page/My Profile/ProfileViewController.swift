@@ -1,5 +1,5 @@
 //
-//  DisplayProfileViewController.swift
+//  ProfileViewController.swift
 //  WA4_Doshi_6855
 //
 //  Created by Dhruv Doshi on 10/3/24.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-class DisplayProfileViewController: UIViewController {
+class ProfileViewController: UIViewController {
 
     //MARK: creating instance of DisplayView...
-    let displayProfileScreen = DisplayProfileView()
+    let profileScreen = ProfileView()
     
     //MARK: patch the view of the controller to the DisplayView...
     override func loadView() {
-        view = displayProfileScreen
+        view = profileScreen
     }
 
     override func viewDidLoad() {
@@ -31,6 +31,8 @@ class DisplayProfileViewController: UIViewController {
             target: self,
             action: #selector(onLogoutButtonTapped)
         )
+        
+        fetchUserProfile()
     }
     
     @objc func onLogoutButtonTapped() {

@@ -31,7 +31,7 @@ class MainTabBarController: UITabBarController {
         let listingsNavController = UINavigationController(rootViewController: listingsVC)
 
         // Initialize ProfileViewController and embed it in a UINavigationController
-        let profileVC = DisplayProfileViewController()
+        let profileVC = ProfileViewController()
         profileVC.title = "Profile"
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person"), tag: 3)
         let profileNavController = UINavigationController(rootViewController: profileVC)
