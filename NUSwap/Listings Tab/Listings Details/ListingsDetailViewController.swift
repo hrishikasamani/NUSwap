@@ -28,7 +28,7 @@ class ListingsDetailViewController: UIViewController {
             listingsDetailScreen.locationLabel.text = item.location
             listingsDetailScreen.descriptionDetailsLabel.text = item.description
             
-            let bidToShow = item.topBid ?? item.basePrice
+            let bidToShow = item.topBidPrice ?? item.basePrice
             listingsDetailScreen.topBidPriceLabel.text = "$\(bidToShow)"
         }
         
@@ -40,7 +40,16 @@ class ListingsDetailViewController: UIViewController {
     
     // sell item to top bid button tapped
     @objc func sellToTopBidAction() {
-        print("yay u made moneyyyyyy!")
+        // get the buyer user id of the top bidder
+        getMostRecentBidder(documentID: self.item?.itemId ?? "missingItemId") { buyerUserId in
+            if let buyerUserId = buyerUserId {
+                self.sealTheDealForItem(documentID: self.item?.itemId ?? "missing", userId: buyerUserId)
+            } else {
+                self.showErrorAlert(message: "No bidder found for this item yet.")
+            }
+        }
+
+        
     }
     
     // delete listing button tapped
@@ -78,5 +87,17 @@ class ListingsDetailViewController: UIViewController {
             }
         })
         present(alert, animated: true)
+    }
+    
+    func sellToTopBidderOnScreen(){
+        listingsDetailScreen.sellToTopBidButton.isEnabled = false
+        listingsDetailScreen.sellToTopBidButton.setTitle("SOLD!", for: .normal)
+    }
+    
+    // Show an alert with the given message
+    func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        self.present(alert, animated: true, completion: nil)
     }
 }

@@ -53,7 +53,7 @@ class ListingsViewController: UIViewController {
             return
         }
 
-        FirebaseItemCommands.fetchUserListings(userEmail: currentUser.email ?? "") { result in
+        fetchUserListingsFromFirebase(userEmail: currentUser.email ?? "") { result in
             switch result {
             case .success(let items):
                 self.listedItems = items

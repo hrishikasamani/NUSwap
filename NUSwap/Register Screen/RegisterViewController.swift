@@ -80,10 +80,6 @@ class RegisterViewController: UIViewController {
         }
         
         registerUserAPI(name: name, email: email, phone: phone, password: password)
-//        // Register success: Navigate to Home Page
-//        let homeVC = MainTabBarController()
-//        homeVC.modalPresentationStyle = .fullScreen
-//        present(homeVC, animated: true, completion: nil)
     }
     
     func registerUserAPI(name: String, email: String, phone: String, password: String){

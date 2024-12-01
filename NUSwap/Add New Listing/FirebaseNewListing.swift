@@ -42,7 +42,7 @@ extension NewListingViewController {
             description: description,
             basePrice: basePrice,
             sealTheDealPrice: sealDealPrice,
-            topBid: nil
+            topBidPrice: nil
         )
 
         FirebaseItemCommands.uploadNewItem(item: newItem) { result in

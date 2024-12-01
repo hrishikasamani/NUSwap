@@ -20,8 +20,6 @@ class ItemDescriptionViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        
-        
         // Button actions
         itemDescriptionScreen.placeBidButton.addTarget(self, action: #selector(placeNewBidAction), for: .touchUpInside)
         
@@ -31,7 +29,7 @@ class ItemDescriptionViewController: UIViewController {
         if let item = item {
             itemDescriptionScreen.itemNameLabel.text = item.name
             itemDescriptionScreen.itemImage.image = UIImage(systemName: "photo") // Placeholder image
-            itemDescriptionScreen.topBidPriceLabel.text = "$\(String(describing: item.topBid ?? 0))"
+            itemDescriptionScreen.topBidPriceLabel.text = "$\(String(describing: item.topBidPrice ?? 0))"
             itemDescriptionScreen.sealDealPriceLabel.text = "$\(item.sealTheDealPrice)"
             itemDescriptionScreen.locationLabel.text = item.location
             itemDescriptionScreen.descriptionDetailsLabel.text = item.description
@@ -49,6 +47,11 @@ class ItemDescriptionViewController: UIViewController {
             
             // update the bids collection
             addNewBidForItem(documentID: item?.itemId ?? "missing", newBidPrice: newBidAmount ?? 0, userId: Auth.auth().currentUser?.email ?? "missing")
+            
+            if var updatedItem = item {
+                updatedItem.topBidPrice = newBidAmount // Update the top bid locally
+                NotificationCenter.default.post(name: NSNotification.Name("NewBiddingAdded"), object: updatedItem.itemId)
+            }
         }
         else {
             showErrorAlert(message: "Invalid bid amount.")
@@ -59,10 +62,10 @@ class ItemDescriptionViewController: UIViewController {
     // MARK: - Seal the Deal funtionality
     @objc func sealTheDealAction() {
         sealTheDealForItem(documentID: item?.itemId ?? "missing", userId: Auth.auth().currentUser?.email ?? "missing")
-        
     }
     
     func sealTheDealOnScreen(){
+        //showActivityIndicator()
         UIView.animate(withDuration: 0.2, animations: {
             self.itemDescriptionScreen.sealDealPriceLabel.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
         }) { _ in
@@ -79,7 +82,7 @@ class ItemDescriptionViewController: UIViewController {
         // Update the text fields
         itemDescriptionScreen.topBidPriceLabel.text = String("$\(newBidAmount)")
         itemDescriptionScreen.newBidTextField.text = ""
-        item?.topBid = newBidAmount
+        item?.topBidPrice = newBidAmount
 
         
         UIView.animate(withDuration: 0.2, animations: {
@@ -93,7 +96,7 @@ class ItemDescriptionViewController: UIViewController {
 
     
     func validateNewBid(newBidAmount: Double) -> Bool {
-        if newBidAmount <= item?.basePrice ?? 0 || newBidAmount <= item?.topBid ?? 0{
+        if newBidAmount <= item?.basePrice ?? 0 || newBidAmount <= item?.topBidPrice ?? 0{
             return false
         }
         

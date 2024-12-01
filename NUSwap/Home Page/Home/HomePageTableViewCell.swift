@@ -83,7 +83,7 @@ class HomePageTableViewCell: UITableViewCell {
     func configure(with item: ItemStruct) {
         itemNameLabel.text = item.name
         itemLocationLabel.text = item.location
-        itemPriceLabel.text = "$\(item.basePrice)"
+        itemPriceLabel.text = "Base Price: $\(item.basePrice)"
         itemSealPriceLabel.text = "Seal: $\(item.sealTheDealPrice)"
         itemDescriptionLabel.text = item.description
         itemImageView.image = UIImage(systemName: "photo") // Placeholder image
