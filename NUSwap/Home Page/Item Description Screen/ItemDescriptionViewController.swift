@@ -29,7 +29,7 @@ class ItemDescriptionViewController: UIViewController {
         if let item = item {
             itemDescriptionScreen.itemNameLabel.text = item.name
             itemDescriptionScreen.itemImage.image = UIImage(systemName: "photo") // Placeholder image
-            itemDescriptionScreen.topBidPriceLabel.text = "$\(String(describing: item.topBidPrice ?? 0))"
+            itemDescriptionScreen.topBidPriceLabel.text = "$\(String(describing: item.topBidPrice ?? item.basePrice))"
             itemDescriptionScreen.sealDealPriceLabel.text = "$\(item.sealTheDealPrice)"
             itemDescriptionScreen.locationLabel.text = item.location
             itemDescriptionScreen.descriptionDetailsLabel.text = item.description
