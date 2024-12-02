@@ -35,7 +35,7 @@ class HomePageTableViewCell: UITableViewCell {
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
         itemImageView.contentMode = .scaleAspectFit
-        itemImageView.image = UIImage(systemName: "photo") // Placeholder image
+        itemImageView.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
         contentView.addSubview(itemImageView)
     }
     
@@ -86,7 +86,8 @@ class HomePageTableViewCell: UITableViewCell {
         itemPriceLabel.text = "Top Bid: $\(item.topBidPrice ?? item.basePrice)"
         itemSealPriceLabel.text = "Seal: $\(item.sealTheDealPrice)"
         itemDescriptionLabel.text = item.description
-        itemImageView.image = UIImage(systemName: "photo") // Placeholder image
+        itemImageView.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+
         
         // Check if the item has a valid image URL
         if let imageUrlString = item.imageURL, let imageUrl = URL(string: imageUrlString) {

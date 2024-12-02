@@ -23,7 +23,7 @@ class ListingsDetailViewController: UIViewController {
         // updates view with the item details
         if let item = item {
             listingsDetailScreen.itemNameLabel.text = item.name
-            listingsDetailScreen.itemImage.image = UIImage(systemName: "photo") // placeholder image
+            listingsDetailScreen.itemImage.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
             listingsDetailScreen.sealDealPriceLabel.text = "$\(item.sealTheDealPrice)"
             listingsDetailScreen.locationLabel.text = item.location
             listingsDetailScreen.descriptionDetailsLabel.text = item.description

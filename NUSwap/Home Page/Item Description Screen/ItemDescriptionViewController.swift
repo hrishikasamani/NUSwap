@@ -28,7 +28,7 @@ class ItemDescriptionViewController: UIViewController {
         // Update the view with the item details
         if let item = item {
             itemDescriptionScreen.itemNameLabel.text = item.name
-            itemDescriptionScreen.itemImage.image = UIImage(systemName: "photo") // Placeholder image
+            itemDescriptionScreen.itemImage.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
             itemDescriptionScreen.topBidPriceLabel.text = "$\(String(describing: item.topBidPrice ?? item.basePrice))"
             itemDescriptionScreen.sealDealPriceLabel.text = "$\(item.sealTheDealPrice)"
             itemDescriptionScreen.locationLabel.text = item.location
