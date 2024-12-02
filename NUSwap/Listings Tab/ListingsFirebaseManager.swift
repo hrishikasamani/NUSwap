@@ -38,7 +38,8 @@ extension ListingsViewController {
                         let description = data["description"] as? String,
                         let basePrice = data["basePrice"] as? Double,
                         let sealTheDealPrice = data["sealTheDealPrice"] as? Double,
-                        data["buyerUserId"] == nil
+                        data["buyerUserId"] == nil,
+                        let imageURL = data["imageURL"] as? String
                     else {
                         return nil
                     }
@@ -56,7 +57,8 @@ extension ListingsViewController {
                         description: description,
                         basePrice: basePrice,
                         sealTheDealPrice: sealTheDealPrice,
-                        topBidPrice: topBidPrice
+                        topBidPrice: topBidPrice,
+                        imageURL: imageURL
                     )
                 }
             completion(.success(items))

@@ -61,7 +61,8 @@ struct BiddingsFirebaseManager {
                             let location = data["location"] as? String,
                             let description = data["description"] as? String,
                             let basePrice = data["basePrice"] as? Double,
-                            let sealTheDealPrice = data["sealTheDealPrice"] as? Double
+                            let sealTheDealPrice = data["sealTheDealPrice"] as? Double,
+                            let imageURL = data["imageURL"] as? String
                         else {
                             dispatchGroup.leave()
                             return
@@ -80,7 +81,8 @@ struct BiddingsFirebaseManager {
                             description: description,
                             basePrice: basePrice,
                             sealTheDealPrice: sealTheDealPrice,
-                            topBidPrice: topBidPrice
+                            topBidPrice: topBidPrice,
+                            imageURL: imageURL
                         )
                         userBiddedItems.append(item)
                         dispatchGroup.leave()
@@ -115,13 +117,15 @@ struct BiddingsFirebaseManager {
                 let location = data["location"] as? String,
                 let description = data["description"] as? String,
                 let basePrice = data["basePrice"] as? Double,
-                let sealTheDealPrice = data["sealTheDealPrice"] as? Double
+                let sealTheDealPrice = data["sealTheDealPrice"] as? Double,
+                let imageURL = data["imageURL"] as? String
             else {
                 return
             }
             
             let buyerUserId = data["buyerUserId"] as? String
             let topBidPrice = data["topBidPrice"] as? Double
+            print("image url here:",imageURL)
             
             let item = ItemStruct(
                 itemId: itemId,
@@ -133,7 +137,8 @@ struct BiddingsFirebaseManager {
                 description: description,
                 basePrice: basePrice,
                 sealTheDealPrice: sealTheDealPrice,
-                topBidPrice: topBidPrice
+                topBidPrice: topBidPrice,
+                imageURL: imageURL
             )
             
             completion(.success(item))

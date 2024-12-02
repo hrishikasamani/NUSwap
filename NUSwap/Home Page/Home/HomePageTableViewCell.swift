@@ -87,6 +87,27 @@ class HomePageTableViewCell: UITableViewCell {
         itemSealPriceLabel.text = "Seal: $\(item.sealTheDealPrice)"
         itemDescriptionLabel.text = item.description
         itemImageView.image = UIImage(systemName: "photo") // Placeholder image
+        
+        // Check if the item has a valid image URL
+        if let imageUrlString = item.imageURL, let imageUrl = URL(string: imageUrlString) {
+            // Fetch the image asynchronously
+            URLSession.shared.dataTask(with: imageUrl) { [weak self] data, response, error in
+                if let error = error {
+                    print("Failed to load image: \(error.localizedDescription)")
+                    return
+                }
+
+                guard let data = data, let fetchedImage = UIImage(data: data) else {
+                    print("Failed to decode image data")
+                    return
+                }
+
+                // Update the UI on the main thread
+                DispatchQueue.main.async {
+                    self?.itemImageView.image = fetchedImage
+                }
+            }.resume()
+        }
     }
     
     // MARK: Setup Constraints

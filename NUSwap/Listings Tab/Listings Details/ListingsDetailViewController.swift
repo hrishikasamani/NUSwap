@@ -30,6 +30,26 @@ class ListingsDetailViewController: UIViewController {
             
             let bidToShow = item.topBidPrice ?? item.basePrice
             listingsDetailScreen.topBidPriceLabel.text = "$\(bidToShow)"
+            
+            // Fetch and display the item image
+            if let imageUrlString = item.imageURL, let imageUrl = URL(string: imageUrlString) {
+                URLSession.shared.dataTask(with: imageUrl) { [weak self] data, response, error in
+                    if let error = error {
+                        print("Failed to load image: \(error.localizedDescription)")
+                        return
+                    }
+
+                    guard let data = data, let fetchedImage = UIImage(data: data) else {
+                        print("Failed to decode image data")
+                        return
+                    }
+
+                    // Update the UIImageView on the main thread
+                    DispatchQueue.main.async {
+                        self?.listingsDetailScreen.itemImage.image = fetchedImage
+                    }
+                }.resume()
+            }
         }
         
         // button actions

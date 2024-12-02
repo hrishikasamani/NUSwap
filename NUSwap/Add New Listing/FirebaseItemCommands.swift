@@ -8,14 +8,16 @@
 import FirebaseFirestore
 
 struct FirebaseItemCommands {
-    static func uploadNewItem(item: ItemStruct, completion: @escaping (Result<Void, Error>) -> Void) {
+    static func uploadNewItem(item: ItemStruct, imageURL: String, completion: @escaping (Result<Void, Error>) -> Void) {
         let db = Firestore.firestore()
         
         // create a ID for the item document
         let itemId = db.collection("items").document().documentID
         
         do {
-            let itemData = try Firestore.Encoder().encode(item)
+            var itemData = try Firestore.Encoder().encode(item)
+            itemData["imageURL"] = imageURL
+            itemData["itemId"] = itemId
             db.collection("items").document(itemId).setData(itemData) { error in
                 if let error = error {
                     completion(.failure(error))
@@ -54,7 +56,8 @@ struct FirebaseItemCommands {
                     let location = data["location"] as? String,
                     let description = data["description"] as? String,
                     let basePrice = data["basePrice"] as? Double,
-                    let sealTheDealPrice = data["sealTheDealPrice"] as? Double
+                    let sealTheDealPrice = data["sealTheDealPrice"] as? Double,
+                    let imageURL = data["imageURL"] as? String
                 else {
                     return nil
                 }
@@ -72,7 +75,8 @@ struct FirebaseItemCommands {
                     description: description,
                     basePrice: basePrice,
                     sealTheDealPrice: sealTheDealPrice,
-                    topBidPrice: topBidPrice
+                    topBidPrice: topBidPrice,
+                    imageURL: imageURL
                 )
             }
             completion(.success(items))

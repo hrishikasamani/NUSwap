@@ -12,6 +12,8 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
     
     var newListingScreen = NewListingView()
     var selectedType = "Electronics"
+    var selectedImage: UIImage?
+    var uploadedImageURL: String? // Declare a local variable to store the URL
 
     override func loadView() {
         view = newListingScreen
@@ -138,11 +140,13 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
     }
 
     // MARK: - Image Picker Delegate Methods
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true) {
             if let selectedImage = info[.originalImage] as? UIImage {
+                self.selectedImage = selectedImage
                 self.newListingScreen.buttonTakePhoto.setImage(selectedImage, for: .normal)
                 self.newListingScreen.buttonTakePhoto.contentMode = .scaleAspectFit
+                
             }
         }
     }

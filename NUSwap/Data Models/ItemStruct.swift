@@ -17,7 +17,8 @@ struct ItemStruct: Codable {
     var description: String
     var basePrice: Double
     var sealTheDealPrice: Double
-    var topBidPrice: Double?     // default as optional bc item no new bid yet
+    var topBidPrice: Double?
+    var imageURL: String?
     
     init(
         itemId: String = "missing",
@@ -29,7 +30,8 @@ struct ItemStruct: Codable {
         description: String = "error",
         basePrice: Double = 0.0,
         sealTheDealPrice: Double = 0.0,
-        topBidPrice: Double? = nil
+        topBidPrice: Double? = nil,
+        imageURL: String? = "missing"
 
     ) {
         self.itemId = itemId
@@ -42,6 +44,7 @@ struct ItemStruct: Codable {
         self.basePrice = basePrice
         self.sealTheDealPrice = sealTheDealPrice
         self.topBidPrice = topBidPrice
+        self.imageURL = imageURL
     }
 }
 

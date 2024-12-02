@@ -34,6 +34,26 @@ class ItemDescriptionViewController: UIViewController {
             itemDescriptionScreen.locationLabel.text = item.location
             itemDescriptionScreen.descriptionDetailsLabel.text = item.description
             itemDescriptionScreen.sealDealButton.setTitle("Seal the Deal for $\(item.sealTheDealPrice)", for: .normal)
+            
+            // Fetch and display the item image
+            if let imageUrlString = item.imageURL, let imageUrl = URL(string: imageUrlString) {
+                URLSession.shared.dataTask(with: imageUrl) { [weak self] data, response, error in
+                    if let error = error {
+                        print("Failed to load image: \(error.localizedDescription)")
+                        return
+                    }
+
+                    guard let data = data, let fetchedImage = UIImage(data: data) else {
+                        print("Failed to decode image data")
+                        return
+                    }
+
+                    // Update the UIImageView on the main thread
+                    DispatchQueue.main.async {
+                        self?.itemDescriptionScreen.itemImage.image = fetchedImage
+                    }
+                }.resume()
+            }
         }
     }
     
