@@ -16,7 +16,7 @@ struct BiddingsFirebaseManager {
         var userBiddedItems: [ItemStruct] = []
         
         // Fetch all items
-        db.collection("items").getDocuments { snapshot, error in
+        db.collection("items").whereField("status", isEqualTo: "available").getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
                 return

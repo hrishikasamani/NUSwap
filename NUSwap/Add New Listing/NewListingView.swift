@@ -262,48 +262,4 @@ class NewListingView: UIView, UITextFieldDelegate {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // Define the character limit
-        let currentText = textField.text ?? ""
-        guard let stringRange = Range(range, in: currentText) else { return false }
-        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-        // Define character limits based on the text field
-        let maxLength: Int
-        if textField == productName {
-            maxLength = 30 // Max length for productName
-        } else if textField == detailsTextField {
-            maxLength = 100 // Max length for detailsTextField
-        } else {
-            maxLength = 30 // Default max length if needed
-        }
-
-        if updatedText.count > maxLength {
-            return false
-        }
-        if textField == priceTextField || textField == sealDealTextField {
-            // Ensure only valid characters are entered
-            let allowedCharacters = CharacterSet(charactersIn: "0123456789.")
-            if string.rangeOfCharacter(from: allowedCharacters.inverted) != nil {
-                return false
-            }
-            // Allow empty text
-            if updatedText.isEmpty { return true }
-            
-            // Ensure only one decimal point
-            if updatedText.filter({ $0 == "." }).count > 1 {
-                return false
-            }
-            
-            // Restrict to two decimal places
-            if let decimalIndex = updatedText.firstIndex(of: ".") {
-                let decimalPart = updatedText[decimalIndex...].dropFirst() // Get characters after "."
-                if decimalPart.count > 2 {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-
 }

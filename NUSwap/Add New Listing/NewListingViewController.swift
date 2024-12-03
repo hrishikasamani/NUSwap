@@ -14,13 +14,18 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
     var selectedType = "Electronics"
     var selectedImage: UIImage?
     var uploadedImageURL: String? // Declare a local variable to store the URL
-
+    
     override func loadView() {
         view = newListingScreen
         newListingScreen.categoryPickerView.dataSource = self
         newListingScreen.categoryPickerView.delegate = self
+        newListingScreen.detailsTextField.delegate = self
+        newListingScreen.productName.delegate = self
+        newListingScreen.locationTextField.delegate = self
+        newListingScreen.sealDealTextField.delegate = self
+        newListingScreen.priceTextField.delegate = self
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -30,6 +35,8 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         newListingScreen.categoryPickerView.dataSource = self
         newListingScreen.categoryPickerView.delegate = self
         newListingScreen.detailsTextField.delegate = self
+        newListingScreen.productName.delegate = self
+        newListingScreen.locationTextField.delegate = self
         
         // Button actions
         newListingScreen.buttonTakePhoto.addTarget(self, action: #selector(showPhotoOptions), for: .touchUpInside)
@@ -62,7 +69,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         newListingScreen.scrollView.contentInset = contentInset
         newListingScreen.scrollView.scrollIndicatorInsets = contentInset
     }
-
+    
     @objc func keyboardWillHide(_ notification: Notification) {
         let contentInset = UIEdgeInsets.zero
         newListingScreen.scrollView.contentInset = contentInset
@@ -74,7 +81,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         let frame = view.convert(view.bounds, to: scrollView)
         scrollView.scrollRectToVisible(frame, animated: true)
     }
-
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         scrollToView(view: textField)
     }
@@ -87,7 +94,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
             textView.textColor = .black
         }
     }
-
+    
     // when description box is blank
     @objc func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
@@ -95,28 +102,28 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
             textView.textColor = .lightGray
         }
     }
-
+    
     // MARK: - Show Photo Options
     @objc func showPhotoOptions() {
         let alert = UIAlertController(title: "Upload Photo", message: "Choose a photo from gallery or take a new one.", preferredStyle: .actionSheet)
-
+        
         let galleryAction = UIAlertAction(title: "Gallery", style: .default) { _ in
             self.openGallery()
         }
-
+        
         let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
             self.openCamera()
         }
-
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-
+        
         alert.addAction(galleryAction)
         alert.addAction(cameraAction)
         alert.addAction(cancelAction)
-
+        
         present(alert, animated: true)
     }
-
+    
     func openGallery() {
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             let imagePicker = UIImagePickerController()
@@ -127,7 +134,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
             showErrorAlert(message: "Gallery is not available.")
         }
     }
-
+    
     func openCamera() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let imagePicker = UIImagePickerController()
@@ -138,7 +145,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
             showErrorAlert(message: "Camera is not available.")
         }
     }
-
+    
     // MARK: - Image Picker Delegate Methods
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true) {
@@ -156,29 +163,29 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
     }
     // hide keyboard
     @objc func hideKeyboardOnTap() {
-            view.endEditing(true)
-        }
-        
+        view.endEditing(true)
+    }
+    
     // MARK: - Error Alert
     func showErrorAlert(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-
+    
     // MARK: - UIPickerView DataSource and Delegate
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return Utilities.types.count
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return Utilities.types[row]
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedType = Utilities.types[row]
     }

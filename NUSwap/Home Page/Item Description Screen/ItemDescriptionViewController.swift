@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class ItemDescriptionViewController: UIViewController {
     var itemDescriptionScreen = ItemDescriptionView()
@@ -77,11 +78,6 @@ class ItemDescriptionViewController: UIViewController {
             showErrorAlert(message: "Invalid bid amount.")
         }
         
-    }
-    
-    // MARK: - Seal the Deal funtionality
-    @objc func sealTheDealAction() {
-        sealTheDealForItem(documentID: item?.itemId ?? "missing", userId: Auth.auth().currentUser?.email ?? "missing")
     }
     
     func sealTheDealOnScreen(){

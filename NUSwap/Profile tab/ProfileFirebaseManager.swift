@@ -42,5 +42,31 @@ extension ProfileViewController {
             }
         }
     }
+    
+    @objc func fetchTransactions() {
+        guard let currentUserEmail = Auth.auth().currentUser?.email else {
+            print("User not logged in")
+            return
+        }
+
+        FirebaseItemCommands.fetchItems { result in
+            switch result {
+            case .success(let fetchedItems):
+                // filters transactions for sealed items
+                let relevantItems = fetchedItems.filter { item in
+                    item.status == "sealed" &&
+                    (item.sellerUserId == currentUserEmail || item.buyerUserId == currentUserEmail)
+                }
+
+                DispatchQueue.main.async {
+                    self.transactions = relevantItems
+                    self.profileScreen.transactionsTableView.reloadData()
+                }
+            case .failure(let error):
+                print("Failed to fetch transactions: \(error.localizedDescription)")
+            }
+        }
+    }
+
 }
 

@@ -62,6 +62,29 @@ extension ItemDescriptionViewController{
         }
     }
 
+    @objc func sealTheDealAction() {
+        guard let itemId = item?.itemId else { return }
 
-    
+        let database = Firestore.firestore()
+        database.collection("items").document(itemId).updateData([
+            "status": "sealed",
+            "buyerUserId": Auth.auth().currentUser?.email ?? ""
+        ]) { [weak self] error in
+            if let error = error {
+                print("Failed to seal the deal: \(error.localizedDescription)")
+                self?.showErrorAlert(message: "Failed to seal the deal.")
+                return
+            }
+
+            print("yay u sealed the deal!! (:")
+            
+            self?.sealTheDealOnScreen()
+            NotificationCenter.default.post(name: Notification.Name("TransactionsUpdated"), object: nil)
+            
+// karyn to ask team what to do after seal the deal; 2 options w/ their own tradeoffs
+//            DispatchQueue.main.async {
+//                        self?.navigationController?.popToRootViewController(animated: true)
+//            }
+        }
+    }
 }

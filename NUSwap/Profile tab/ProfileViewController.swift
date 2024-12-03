@@ -7,22 +7,35 @@
 
 
 import UIKit
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseFirestore
 
 class ProfileViewController: UIViewController {
 
     //MARK: creating instance of DisplayView...
     let profileScreen = ProfileView()
     
+    var transactions: [ItemStruct] = []
+    
     //MARK: patch the view of the controller to the DisplayView...
     override func loadView() {
         view = profileScreen
+        profileScreen.transactionsTableView.dataSource = self
+        profileScreen.transactionsTableView.delegate = self
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //hideKeyboardWhenTappedAround()
         
         title = "My Profile"
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(fetchTransactions),
+            name: Notification.Name("TransactionsUpdated"),
+            object: nil
+        )
         
         // Add Logout button in the navigation bar
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -33,6 +46,7 @@ class ProfileViewController: UIViewController {
         )
         
         fetchUserProfile()
+        fetchTransactions()
     }
     
     @objc func onLogoutButtonTapped() {

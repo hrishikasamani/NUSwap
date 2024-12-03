@@ -46,7 +46,7 @@ class BiddingsViewController: UIViewController {
             switch result {
             case .success(let items):
                 DispatchQueue.main.async {
-                    self.biddedItems = items // Update the data source
+                    self.biddedItems = items.filter { $0.status == "available" } // fetches only available items
                     print("Fetched items: \(self.biddedItems)")
                     self.updateEmptyList()
                     self.BiddingsScreen.tableViewBiddings.reloadData()
@@ -65,7 +65,7 @@ class BiddingsViewController: UIViewController {
         BiddingsFirebaseManager.fetchItemDetails(itemId: itemId) { result in
             switch result {
             case .success(let newItem):
-                if !self.biddedItems.contains(where: { $0.itemId == newItem.itemId }) {
+                if newItem.status == "available" && !self.biddedItems.contains(where: { $0.itemId == newItem.itemId }) {
                     self.biddedItems.append(newItem)
                     DispatchQueue.main.async {
                         self.updateEmptyList()

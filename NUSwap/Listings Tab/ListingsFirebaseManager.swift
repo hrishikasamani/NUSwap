@@ -16,6 +16,7 @@ extension ListingsViewController {
 
         db.collection("items")
             .whereField("sellerUserId", isEqualTo: userEmail)
+            .whereField("status", isEqualTo: "available")
             .getDocuments { snapshot, error in
                 if let error = error {
                     completion(.failure(error))

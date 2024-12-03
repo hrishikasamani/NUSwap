@@ -57,6 +57,7 @@ struct FirebaseItemCommands {
                     let description = data["description"] as? String,
                     let basePrice = data["basePrice"] as? Double,
                     let sealTheDealPrice = data["sealTheDealPrice"] as? Double,
+                    let status = data["status"] as? String,
                     let imageURL = data["imageURL"] as? String
                 else {
                     return nil
@@ -76,7 +77,8 @@ struct FirebaseItemCommands {
                     basePrice: basePrice,
                     sealTheDealPrice: sealTheDealPrice,
                     topBidPrice: topBidPrice,
-                    imageURL: imageURL
+                    imageURL: imageURL,
+                    status: status
                 )
             }
             completion(.success(items))
