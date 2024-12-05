@@ -81,7 +81,7 @@ extension ItemDescriptionViewController{
             self?.sealTheDealOnScreen()
             NotificationCenter.default.post(name: Notification.Name("TransactionsUpdated"), object: nil)
             
-// karyn to ask team what to do after seal the deal; 2 options w/ their own tradeoffs
+//          // go to home screen after deal is sealed
 //            DispatchQueue.main.async {
 //                        self?.navigationController?.popToRootViewController(animated: true)
 //            }

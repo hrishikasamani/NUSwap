@@ -189,4 +189,73 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedType = Utilities.types[row]
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // Define the character limit
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        // Define character limits based on the text field
+        let maxLength: Int
+        if textField == newListingScreen.productName {
+            maxLength = 30 // Max length for productName
+        } else if textField == newListingScreen.detailsTextField {
+            maxLength = 200 // Max length for detailsTextField
+        } else if textField == newListingScreen.priceTextField || textField == newListingScreen.sealDealTextField {
+            // Max length for priceTextField and sealDealTextField
+            maxLength = 12
+        } else {
+            maxLength = 30 // Default max length if needed
+        }
+        
+        // General character limit check
+        if updatedText.count > maxLength {
+            return false
+        }
+        
+        // Special validation for priceTextField and sealDealTextField
+        if textField == newListingScreen.priceTextField || textField == newListingScreen.sealDealTextField {
+            // Ensure only valid characters are entered
+            let allowedCharacters = CharacterSet(charactersIn: "0123456789.")
+            if string.rangeOfCharacter(from: allowedCharacters.inverted) != nil {
+                return false
+            }
+            
+            // Allow empty text
+            if updatedText.isEmpty { return true }
+            
+            // Ensure only one decimal point
+            if updatedText.filter({ $0 == "." }).count > 1 {
+                return false
+            }
+            
+            // Ensure total digits (excluding the decimal point) do not exceed 12
+            let digitCount = updatedText.filter { $0.isWholeNumber }.count
+            if digitCount > 12 {
+                return false
+            }
+            
+            // Restrict to two decimal places
+            if let decimalIndex = updatedText.firstIndex(of: ".") {
+                let decimalPart = updatedText[decimalIndex...].dropFirst() // Get characters after "."
+                if decimalPart.count > 2 {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if textView == newListingScreen.detailsTextField {
+            let currentText = textView.text ?? ""
+            guard let stringRange = Range(range, in: currentText) else { return false }
+            let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
+            return updatedText.count <= 200
+        }
+        return true
+    }
+
 }

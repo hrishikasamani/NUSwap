@@ -14,21 +14,21 @@ extension NewListingViewController {
         // check item name
         let productName = newListingScreen.productName.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard productName.count <= 30, !productName.isEmpty else {
-            showErrorAlert(message: "Item name must be 30 characters or less and cannot be empty.")
+            showErrorAlert(message: "Item name cannot be empty.")
             return
         }
         
         // check price
         guard let formattedPrice = formatPrice(newListingScreen.priceTextField.text),
                   let basePrice = Double(formattedPrice), basePrice >= 0 else {
-                showErrorAlert(message: "Invalid Base Price format; should be in 'XX.XX' format with 2 decimal places (e.g., '52.88').")
+                showErrorAlert(message: "Base price format should be in 'XX.XX' with 2 decimal places (e.g., '52.88').")
                 return
             }
         
         // check seal deal price
         guard let formattedSealDeal = formatPrice(newListingScreen.sealDealTextField.text),
                   let sealDealPrice = Double(formattedSealDeal), sealDealPrice >= basePrice else {
-                showErrorAlert(message: "Invalid Seal the Deal price; should be in 'XX.XX' format with 2 decimal places and at least equal to the Base Price.")
+                showErrorAlert(message: "Seal the Deal price should be equal to or greater than Base Price.")
                 return
             }
         
@@ -40,7 +40,7 @@ extension NewListingViewController {
         // check location
         let location = newListingScreen.locationTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard location.count <= 30, !location.isEmpty else {
-            showErrorAlert(message: "Location must be 30 characters or less and cannot be empty.")
+            showErrorAlert(message: "Location cannot be empty.")
             return
         }
         guard self.validateLocation(location) else {
