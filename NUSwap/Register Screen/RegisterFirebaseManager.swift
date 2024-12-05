@@ -11,22 +11,51 @@ import FirebaseFirestore
 
 extension RegisterViewController{
     
-    func registerNewAccount(){
+    func registerNewAccount() {
         showActivityIndicator()
-        //MARK: create a Firebase user with email and password...
-        if let name = registerScreen.textFieldName.text,
-           let email = registerScreen.textFieldEmail.text?.lowercased(),
-           let phone = registerScreen.textFieldPhone.text,
-           let password = registerScreen.textFieldPassword.text{
-            //Validations....
-            Auth.auth().createUser(withEmail: email, password: password, completion: {result, error in
-                if error == nil{
-                    //MARK: the user creation is successful...
-                    self.setNameOfTheUserInFirebaseAuth(name: name, email: email, phone: phone)
-                }else{
-                    print(error!)
-                }
-            })
+        
+        guard let name = registerScreen.textFieldName.text,
+              let email = registerScreen.textFieldEmail.text?.lowercased(),
+              let phone = registerScreen.textFieldPhone.text,
+              let password = registerScreen.textFieldPassword.text else {
+            hideActivityIndicator()
+            showErrorAlert(message: "Please fill all fields.")
+            return
+        }
+        
+        // check if the email is already registered in Firestore
+        let database = Firestore.firestore()
+        database.collection("users").document(email).getDocument { documentSnapshot, error in
+            if let error = error {
+                self.hideActivityIndicator()
+                print("Error checking user existence: \(error.localizedDescription)")
+                self.showErrorAlert(message: "An error occurred. Please try again.")
+                return
+            }
+            
+            if let document = documentSnapshot, document.exists {
+                // email already registered
+                self.hideActivityIndicator()
+                self.showErrorAlert(message: "This email is already registered. Please use a different email or log in.")
+            } else {
+                // proceed with registration
+                self.createFirebaseUser(name: name, email: email, phone: phone, password: password)
+            }
+        }
+    }
+    
+    // helper method to create firebase user
+    func createFirebaseUser(name: String, email: String, phone: String, password: String) {
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                self.hideActivityIndicator()
+                print("Error creating user: \(error.localizedDescription)")
+                self.showErrorAlert(message: "Registration failed. Please try again.")
+                return
+            }
+            
+            // user created
+            self.setNameOfTheUserInFirebaseAuth(name: name, email: email, phone: phone)
         }
     }
     

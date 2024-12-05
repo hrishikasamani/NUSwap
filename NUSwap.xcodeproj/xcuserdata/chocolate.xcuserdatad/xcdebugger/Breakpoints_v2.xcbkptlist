@@ -18,6 +18,36 @@
             endingLineNumber = "86"
             landmarkName = "sealTheDealAction()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A750FE00-3300-4853-867F-E67C4CB33FA8 - 230b475ae15ba005"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in NUSwap.ItemDescriptionViewController.sealTheDealAction() -&gt; ()"
+                  moduleName = "NUSwap.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/chocolate/Desktop/NUSwap/NUSwap/Home%20Page/Item%20Description%20Screen/ItemDescriptionFirebaseManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "87"
+                  endingLineNumber = "87">
+               </Location>
+               <Location
+                  uuid = "A750FE00-3300-4853-867F-E67C4CB33FA8 - 230b475ae15ba1e4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in NUSwap.ItemDescriptionViewController.sealTheDealAction() -&gt; ()"
+                  moduleName = "NUSwap.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/chocolate/Desktop/NUSwap/NUSwap/Home%20Page/Item%20Description%20Screen/ItemDescriptionFirebaseManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "88"
+                  endingLineNumber = "88">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
