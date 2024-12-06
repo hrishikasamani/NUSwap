@@ -61,6 +61,7 @@ extension ProfileViewController {
                 DispatchQueue.main.async {
                     self.transactions = relevantItems
                     self.profileScreen.transactionsTableView.reloadData()
+                    self.updateEmptyList()
                 }
             case .failure(let error):
                 print("Failed to fetch transactions: \(error.localizedDescription)")

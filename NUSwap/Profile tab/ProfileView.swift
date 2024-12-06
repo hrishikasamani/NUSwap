@@ -18,6 +18,7 @@ class ProfileView: UIView {
     var labelTransactionDescription: UILabel!
     var dividerLine2: UIView!
     var transactionsTableView: UITableView!
+    var emptyListLabel: UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,6 +34,8 @@ class ProfileView: UIView {
         setupLabelTransactionDescription()
         setupDividerLine2()
         setupTransactionsTableView()
+        setupEmptyListLabel()
+        
         initConstraints()
     }
     
@@ -105,6 +108,23 @@ class ProfileView: UIView {
         contentWrapper.addSubview(transactionsTableView)
     }
     
+    func setupEmptyListLabel() {
+        emptyListLabel = UILabel()
+        emptyListLabel.text = """
+                              No transactions recorded yet. 
+                              
+                              Once you have made a sale or purchase,
+                              they will appear here.
+                              """
+        emptyListLabel.textColor = .gray
+        emptyListLabel.textAlignment = .center
+        emptyListLabel.font = UIFont.systemFont(ofSize: 14)
+        emptyListLabel.isHidden = true
+        emptyListLabel.numberOfLines = 0
+        emptyListLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(emptyListLabel)
+    }
+    
     func initConstraints() {
         NSLayoutConstraint.activate([
             contentWrapper.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
@@ -141,6 +161,11 @@ class ProfileView: UIView {
             transactionsTableView.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor),
             transactionsTableView.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor),
             transactionsTableView.bottomAnchor.constraint(equalTo: contentWrapper.bottomAnchor),
+            
+            emptyListLabel.topAnchor.constraint(equalTo: self.dividerLine2.bottomAnchor, constant: 20),
+            emptyListLabel.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
+            emptyListLabel.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 10),
+            emptyListLabel.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor, constant: -10),
             
             //labelTransactionDescription.bottomAnchor.constraint(equalTo: contentWrapper.bottomAnchor, constant: -20)
         ])

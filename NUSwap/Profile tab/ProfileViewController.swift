@@ -30,6 +30,8 @@ class ProfileViewController: UIViewController {
         
         title = "My Profile"
         
+        updateEmptyList()
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(fetchTransactions),
@@ -81,4 +83,11 @@ class ProfileViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
     }
+    
+    func updateEmptyList() {
+        let hasTransactions = !transactions.isEmpty
+        profileScreen.emptyListLabel.isHidden = hasTransactions
+        profileScreen.transactionsTableView.isHidden = !hasTransactions
+    }
+
 }
