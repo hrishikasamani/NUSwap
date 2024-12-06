@@ -38,12 +38,12 @@ class ListingsDetailViewController: UIViewController {
                         print("Failed to load image: \(error.localizedDescription)")
                         return
                     }
-
+                    
                     guard let data = data, let fetchedImage = UIImage(data: data) else {
                         print("Failed to decode image data")
                         return
                     }
-
+                    
                     // Update the UIImageView on the main thread
                     DispatchQueue.main.async {
                         self?.listingsDetailScreen.itemImage.image = fetchedImage
@@ -60,32 +60,38 @@ class ListingsDetailViewController: UIViewController {
     
     // sell item to top bid button tapped
     @objc func sellToTopBidAction() {
-        // get the buyer user id of the top bidder
-        getMostRecentBidder(documentID: self.item?.itemId ?? "missingItemId") { buyerUserId in
-            if let buyerUserId = buyerUserId {
-                self.sealTheDealForItem(documentID: self.item?.itemId ?? "missing", userId: buyerUserId)
-            } else {
-                self.showErrorAlert(message: "No bidder found for this item yet.")
-            }
+        guard let item = self.item else {
+            showErrorAlert(message: "Item not found.")
+            return
         }
-
         
+        let updatedTopBidPrice = item.topBidPrice ?? item.sealTheDealPrice
+        soldToTopBidder(itemId: item.itemId, updatedBidPrice: updatedTopBidPrice)
     }
     
+    // update button to "sold" after selling item to top bidder
+    func sellToTopBidderOnScreen() {
+        DispatchQueue.main.async {
+            self.listingsDetailScreen.sellToTopBidButton.isEnabled = false
+            self.listingsDetailScreen.sellToTopBidButton.setTitle("SOLD!", for: .normal)
+        }
+    }
+        
+        
     // delete listing button tapped
     @objc func deleteListingAction() {
         guard let item = item else { return }
-
+        
         // ui alert
         let alert = UIAlertController(
             title: "Delete Listing",
             message: "Are you sure you want to delete this listing? This action cannot be undone.",
             preferredStyle: .alert
         )
-
+        
         // cancel action
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-
+        
         // delete action
         alert.addAction(UIAlertAction(title: "Delete Listing", style: .destructive) { [weak self] _ in
             Firestore.firestore().collection("items").document(item.itemId).delete { error in
@@ -108,11 +114,7 @@ class ListingsDetailViewController: UIViewController {
         })
         present(alert, animated: true)
     }
-    
-    func sellToTopBidderOnScreen(){
-        listingsDetailScreen.sellToTopBidButton.isEnabled = false
-        listingsDetailScreen.sellToTopBidButton.setTitle("SOLD!", for: .normal)
-    }
+
     
     // Show an alert with the given message
     func showErrorAlert(message: String) {

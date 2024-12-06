@@ -90,7 +90,7 @@ class ItemDescriptionViewController: UIViewController {
             }
         }
         itemDescriptionScreen.sealDealButton.isEnabled = false
-        itemDescriptionScreen.sealDealButton.setTitle("ALREADY YOURS!", for: .normal)
+        itemDescriptionScreen.sealDealButton.setTitle("NOW YOURS!", for: .normal)
         // navigate to the Biddings screen AFTER sealthedeal is success??
     }
     
