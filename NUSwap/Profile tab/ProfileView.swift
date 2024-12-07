@@ -13,6 +13,7 @@ class ProfileView: UIView {
     var labelName: UILabel!
     var labelEmail: UILabel!
     var labelPhone: UILabel!
+    var toggle: UISegmentedControl!
     var dividerLine: UIView!
     var labelCompletedTransactions: UILabel!
     var labelTransactionDescription: UILabel!
@@ -29,6 +30,7 @@ class ProfileView: UIView {
         setupLabelName()
         setupLabelEmail()
         setupLabelPhone()
+        setupToggle()
         setupDividerLine()
         setupLabelCompletedTransactions()
         setupLabelTransactionDescription()
@@ -66,6 +68,18 @@ class ProfileView: UIView {
         labelPhone.translatesAutoresizingMaskIntoConstraints = false
         labelPhone.text = "Phone: 999999999"
         contentWrapper.addSubview(labelPhone)
+    }
+    
+    func setupToggle() {
+        toggle = UISegmentedControl(items: ["Light Mode", "Dark Mode"])
+        toggle.selectedSegmentIndex = 0 // Default to Light Mode
+        toggle.translatesAutoresizingMaskIntoConstraints = false
+        toggle.layer.cornerRadius = 16 // Make it look like a switch
+        toggle.backgroundColor = UIColor.systemGray5
+        toggle.selectedSegmentTintColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
+        toggle.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        toggle.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        contentWrapper.addSubview(toggle)
     }
     
     func setupDividerLine() {
@@ -132,16 +146,19 @@ class ProfileView: UIView {
             contentWrapper.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor),
             contentWrapper.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
             
-            labelName.topAnchor.constraint(equalTo: contentWrapper.topAnchor, constant: 5),
+            labelName.topAnchor.constraint(equalTo: contentWrapper.topAnchor, constant: 10),
             labelName.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
             
-            labelEmail.topAnchor.constraint(equalTo: labelName.bottomAnchor, constant: 3),
+            labelEmail.topAnchor.constraint(equalTo: labelName.bottomAnchor, constant: 10),
             labelEmail.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
             
-            labelPhone.topAnchor.constraint(equalTo: labelEmail.bottomAnchor, constant: 3),
+            labelPhone.topAnchor.constraint(equalTo: labelEmail.bottomAnchor, constant: 10),
             labelPhone.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
             
-            dividerLine.topAnchor.constraint(equalTo: labelPhone.bottomAnchor, constant: 10),
+            toggle.topAnchor.constraint(equalTo: labelPhone.bottomAnchor, constant: 15),
+            toggle.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
+            
+            dividerLine.topAnchor.constraint(equalTo: toggle.bottomAnchor, constant: 20),
             dividerLine.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 16),
             dividerLine.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor, constant: -16),
             dividerLine.heightAnchor.constraint(equalToConstant: 2),

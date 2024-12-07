@@ -39,7 +39,7 @@ class MainTabBarController: UITabBarController {
         // Set the viewControllers property to the navigation controllers
         self.viewControllers = [homeNavController, biddingsNavController, listingsNavController, profileNavController]
         
-        UITabBar.appearance().tintColor = UIColor.systemRed
+        UITabBar.appearance().tintColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
         UITabBar.appearance().unselectedItemTintColor = UIColor.gray
     }
 }

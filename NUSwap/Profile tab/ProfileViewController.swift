@@ -29,8 +29,9 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "My Profile"
+        title = "Profile"
         
+        profileScreen.toggle.addTarget(self, action: #selector(onToggleChanged), for: .valueChanged)
         updateEmptyList()
         
         NotificationCenter.default.addObserver(
@@ -47,10 +48,62 @@ class ProfileViewController: UIViewController {
             target: self,
             action: #selector(onLogoutButtonTapped)
         )
+        // Set text color
+        navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+            [.foregroundColor: UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)],
+            for: .normal
+        )
         
         fetchUserProfile()
         fetchTransactions()
+        
+        // Set the default theme based on saved preference
+        let isDarkMode = UserDefaults.standard.bool(forKey: "isDarkMode")
+        profileScreen.toggle.selectedSegmentIndex = isDarkMode ? 1 : 0
+        applyTheme(isDarkMode: isDarkMode)
     }
+    
+    @objc func onToggleChanged(_ sender: UISegmentedControl) {
+        let isDarkMode = sender.selectedSegmentIndex == 1
+        UserDefaults.standard.set(isDarkMode, forKey: "isDarkMode")
+        applyTheme(isDarkMode: isDarkMode)
+    }
+
+    func applyTheme(isDarkMode: Bool) {
+        if let window = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first?.windows.first {
+            window.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
+        }
+        // Change the navigation bar's appearance
+        UINavigationBar.appearance().barStyle = isDarkMode ? .black : .default
+        UINavigationBar.appearance().tintColor = isDarkMode ? .white : .black
+        
+        profileScreen.backgroundColor = isDarkMode ? UIColor.black : UIColor.white
+        
+        // If you have other views with backgrounds, you should update their background color as well
+        profileScreen.contentWrapper.backgroundColor = isDarkMode ? UIColor.black : UIColor.white
+        
+        // Update labels and other text elements
+        updateTextColors(for: profileScreen, isDarkMode: isDarkMode)
+    }
+    
+    func updateTextColors(for view: UIView, isDarkMode: Bool) {
+        let textColor = isDarkMode ? UIColor.white : UIColor.black
+        //profileScreen.labelName.textColor = textColor
+        profileScreen.labelEmail.textColor = textColor
+        profileScreen.labelPhone.textColor = textColor
+        profileScreen.labelCompletedTransactions.textColor = textColor
+        profileScreen.labelTransactionDescription.textColor = textColor
+        profileScreen.emptyListLabel.textColor = textColor
+        
+        
+        // Recursively update subviews
+        for subview in view.subviews {
+            updateTextColors(for: subview, isDarkMode: isDarkMode)
+        }
+    }
+    
     
     @objc func onLogoutButtonTapped() {
         // Create the alert controller
