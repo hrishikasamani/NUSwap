@@ -18,6 +18,7 @@ class ProfileViewController: UIViewController {
     let childProgressView = ProgressSpinnerViewController()
     
     var transactions: [ItemStruct] = []
+    var transactionListener: ListenerRegistration?
     
     //MARK: patch the view of the controller to the DisplayView...
     override func loadView() {
@@ -56,12 +57,43 @@ class ProfileViewController: UIViewController {
         
         fetchUserProfile()
         fetchTransactions()
+        callTransactionListener()
         
         // Set the default theme based on saved preference
         let isDarkMode = UserDefaults.standard.bool(forKey: "isDarkMode")
         profileScreen.toggle.selectedSegmentIndex = isDarkMode ? 1 : 0
         applyTheme(isDarkMode: isDarkMode)
     }
+    
+    deinit {
+            transactionListener?.remove()
+        }
+    
+    func callTransactionListener() {
+            guard let currentUserEmail = Auth.auth().currentUser?.email else {
+                print("User not logged in")
+                return
+            }
+
+            transactionListener = FirebaseItemCommands.fetchItemsRealTime { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let fetchedItems):
+                    let relevantItems = fetchedItems.filter { item in
+                        (item.status == "usingSealTheDeal" || item.status == "usingTopBidder") &&
+                        (item.sellerUserId == currentUserEmail || item.buyerUserId == currentUserEmail)
+                    }
+
+                    DispatchQueue.main.async {
+                        self.transactions = relevantItems
+                        self.profileScreen.transactionsTableView.reloadData()
+                        self.updateEmptyList()
+                    }
+                case .failure(let error):
+                    print("Failed to fetch real-time transactions: \(error.localizedDescription)")
+                }
+            }
+        }
     
     @objc func onToggleChanged(_ sender: UISegmentedControl) {
         let isDarkMode = sender.selectedSegmentIndex == 1
