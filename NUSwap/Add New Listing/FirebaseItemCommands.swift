@@ -9,6 +9,7 @@ import FirebaseFirestore
 
 struct FirebaseItemCommands {
     static func uploadNewItem(item: ItemStruct, imageURL: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        
         let db = Firestore.firestore()
         
         // create a ID for the item document

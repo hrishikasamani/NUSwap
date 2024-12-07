@@ -11,6 +11,7 @@ import UIKit
 
 extension NewListingViewController {
     @objc func addListing() {
+        
         // check item name
         let productName = newListingScreen.productName.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard productName.count <= 30, !productName.isEmpty else {
@@ -64,6 +65,8 @@ extension NewListingViewController {
             showErrorAlert(message: "Unable to process the image.")
             return
         }
+        
+        showActivityIndicator()
 
         // Create a unique file name for the image
         let fileName = "\(UUID().uuidString).jpg"
@@ -121,8 +124,10 @@ extension NewListingViewController {
                             
                             // Navigate back to ListingsViewController
                             self.navigationController?.popViewController(animated: true)
+                            self.hideActivityIndicator()
                         case .failure(let error):
                             self.showErrorAlert(message: "Failed to upload listing: \(error.localizedDescription)")
+                            self.hideActivityIndicator()
                         }
                     }
                 }
@@ -160,40 +165,5 @@ extension NewListingViewController {
         return locationPredicate.evaluate(with: location)
     }
     
-    func uploadImageToFirebase(image: UIImage) {
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-            showErrorAlert(message: "Unable to process the image.")
-            return
-        }
-        
-        // Create a unique file name for the image
-        let fileName = "\(UUID().uuidString).jpg"
-        
-        // Get a reference to Firebase Storage
-        let storageRef = Storage.storage().reference().child("item_images/\(fileName)")
-        
-        // Upload the image
-        storageRef.putData(imageData, metadata: nil) { metadata, error in
-            if let error = error {
-                self.showErrorAlert(message: "Upload failed: \(error.localizedDescription)")
-                return
-            }
-            
-            // Fetch the download URL
-            storageRef.downloadURL { url, error in
-                if let error = error {
-                    self.showErrorAlert(message: "Failed to retrieve download URL: \(error.localizedDescription)")
-                    return
-                }
-                
-                guard let downloadURL = url else {
-                    self.showErrorAlert(message: "Download URL is nil.")
-                    return
-                }
-                
-                self.uploadedImageURL = downloadURL.absoluteString // Save the URL in the local variable
-                print("Image uploaded successfully. URL: \(self.uploadedImageURL ?? "No URL")")
-            }
-        }
-    }
+
 }

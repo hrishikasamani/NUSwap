@@ -14,6 +14,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
     var selectedType = "Electronics"
     var selectedImage: UIImage?
     var uploadedImageURL: String? // Declare a local variable to store the URL
+    let childProgressView = ProgressSpinnerViewController()
     
     override func loadView() {
         view = newListingScreen

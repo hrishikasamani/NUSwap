@@ -15,6 +15,7 @@ class ProfileViewController: UIViewController {
 
     //MARK: creating instance of DisplayView...
     let profileScreen = ProfileView()
+    let childProgressView = ProgressSpinnerViewController()
     
     var transactions: [ItemStruct] = []
     
@@ -65,11 +66,28 @@ class ProfileViewController: UIViewController {
         
         // Add "Logout" action
         let logoutAction = UIAlertAction(title: "Logout", style: .destructive) { _ in
-            // Navigate back to the login page
-            let loginViewController = ViewController()
-            let navController = UINavigationController(rootViewController: loginViewController)
-            navController.modalPresentationStyle = .fullScreen
-            self.present(navController, animated: true, completion: nil)
+            do {
+                // Attempt to log the user out from Firebase
+                try Auth.auth().signOut()
+                
+                // Navigate back to the login page
+                let loginViewController = ViewController()
+                let navController = UINavigationController(rootViewController: loginViewController)
+                navController.modalPresentationStyle = .fullScreen
+                self.present(navController, animated: true, completion: nil)
+            } catch let error {
+                // Handle any errors during sign out
+                print("Error signing out: \(error.localizedDescription)")
+                
+                // Show an error alert to the user
+                let errorAlert = UIAlertController(
+                    title: "Logout Failed",
+                    message: "Unable to log out at the moment. Please try again later.",
+                    preferredStyle: .alert
+                )
+                errorAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(errorAlert, animated: true, completion: nil)
+            }
         }
         alertController.addAction(logoutAction)
         

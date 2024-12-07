@@ -29,14 +29,27 @@ extension ViewController{
     
     func navigateToHomePage() {
         let homePage = MainTabBarController()
-        print("User logged in successfully")
         // Fetch listings immediately after navigating to the home page
             if let homeNavController = homePage.viewControllers?.first as? UINavigationController,
                let homeVC = homeNavController.viewControllers.first as? HomePageViewController {
                 homeVC.fetchListings()
             }
+
+        
+
+        
+
+        // Find a UIWindowScene in the foreground state
+        if let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }) {
             
-            navigationController?.setViewControllers([homePage], animated: true)
+            if let window = windowScene.windows.first {
+                window.rootViewController = UINavigationController(rootViewController: homePage)
+                window.makeKeyAndVisible()
+            }
+        }
+        
         
     }
 }
