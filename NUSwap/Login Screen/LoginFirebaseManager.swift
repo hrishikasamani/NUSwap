@@ -29,6 +29,7 @@ extension ViewController{
     
     func navigateToHomePage() {
         let homePage = MainTabBarController()
+        homePage.modalPresentationStyle = .fullScreen
         // Fetch listings immediately after navigating to the home page
             if let homeNavController = homePage.viewControllers?.first as? UINavigationController,
                let homeVC = homeNavController.viewControllers.first as? HomePageViewController {
@@ -45,7 +46,8 @@ extension ViewController{
             .first(where: { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }) {
             
             if let window = windowScene.windows.first {
-                window.rootViewController = UINavigationController(rootViewController: homePage)
+                window.rootViewController = homePage
+
                 window.makeKeyAndVisible()
             }
         }

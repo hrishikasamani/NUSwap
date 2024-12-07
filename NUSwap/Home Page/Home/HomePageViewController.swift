@@ -55,7 +55,6 @@ class HomePageViewController: UIViewController {
     // re-fetches data whenever view reloads
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchListings()
     }
     
     deinit {
