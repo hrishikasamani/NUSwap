@@ -60,13 +60,14 @@ class ListingsDetailViewController: UIViewController {
     
     // sell item to top bid button tapped
     @objc func sellToTopBidAction() {
-        guard let item = self.item else {
-            showErrorAlert(message: "Item not found.")
-            return
+        // get the buyer user id of the top bidder
+        getMostRecentBidder(documentID: self.item?.itemId ?? "missingItemId") { buyerUserId in
+            if let buyerUserId = buyerUserId {
+                self.sealTheDealForItem(documentID: self.item?.itemId ?? "missing", userId: buyerUserId)
+            } else {
+                self.showErrorAlert(message: "No bidder found for this item yet.")
+            }
         }
-        
-        let updatedTopBidPrice = item.topBidPrice ?? item.sealTheDealPrice
-        soldToTopBidder(itemId: item.itemId, updatedBidPrice: updatedTopBidPrice)
     }
     
     // update button to "sold" after selling item to top bidder

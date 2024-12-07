@@ -67,7 +67,7 @@ extension ItemDescriptionViewController{
 
         let database = Firestore.firestore()
         database.collection("items").document(itemId).updateData([
-            "status": "sealed",
+            "status": "usingSealTheDeal",
             "buyerUserId": Auth.auth().currentUser?.email ?? ""
         ]) { [weak self] error in
             if let error = error {
@@ -80,11 +80,6 @@ extension ItemDescriptionViewController{
             
             self?.sealTheDealOnScreen()
             NotificationCenter.default.post(name: Notification.Name("TransactionsUpdated"), object: nil)
-            
-//          // go to home screen after deal is sealed
-//            DispatchQueue.main.async {
-//                        self?.navigationController?.popToRootViewController(animated: true)
-//            }
         }
     }
 }

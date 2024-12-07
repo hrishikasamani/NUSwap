@@ -40,43 +40,25 @@ extension ListingsDetailViewController {
     }
     
     // update item status and bidder info to firestore when item is sold
-    func soldToTopBidder(itemId: String, updatedBidPrice: Double) {
-        let itemRef = Firestore.firestore().collection("items").document(itemId)
+    func sealTheDealForItem(documentID: String, userId: String) {
+        let database = Firestore.firestore()
+        let itemRef = database.collection("items").document(documentID)
         
-        // update the bid price
-        itemRef.updateData(["topBidPrice": updatedBidPrice]) { [weak self] error in
-            if let error = error {
-                print("Failed to update topBidPrice: \(error.localizedDescription)")
-                self?.showErrorAlert(message: "Failed to seal the deal. Please try again.")
-                return
-            }
-            
-            print("Successfully updated topBidPrice for item \(itemId).")
-            
-            // get most recent bidder
-            self?.getMostRecentBidder(documentID: itemId) { buyerUserId in
-                guard let self = self else { return }
-                guard let buyerUserId = buyerUserId else {
-                    print("No valid buyer found for this item.")
-                    self.showErrorAlert(message: "No bidder found for this item.")
-                    return
-                }
-                
-                // update item status and button to "SOLD"
-                Firestore.firestore().collection("items").document(itemId).updateData([
-                    "status": "sealed",
-                    "buyerUserId": buyerUserId
-                ]) { error in
-                    if let error = error {
-                        print("Failed to seal the deal for document \(itemId): \(error.localizedDescription)")
-                        self.showErrorAlert(message: "Failed to seal the deal. Please try again.")
-                        return
-                    }
+        // Updating the basePrice field
+        itemRef.updateData([
+                "buyerUserId": userId,
+                "status": "usingTopBidder"
+            ]) { error in
+                if let error = error {
+                    print("Failed to update buyerUserId for document \(documentID): \(error.localizedDescription)")
+                } else {
+                    print("Successfully updated buyerUserId for document \(documentID).")
                     
-                    print("Successfully sealed the deal for item \(itemId).")
+                    print("yay you've the sold item!! (:")
                     self.sellToTopBidderOnScreen()
+                    
+                    NotificationCenter.default.post(name: Notification.Name("TransactionsUpdated"), object: nil)
                 }
             }
-        }
     }
 }

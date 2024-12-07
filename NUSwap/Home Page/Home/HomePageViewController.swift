@@ -55,7 +55,7 @@ class HomePageViewController: UIViewController {
         FirebaseItemCommands.fetchItems { result in
             switch result {
             case .success(let fetchedItems):
-                // filters out items where the user is the seller & with status "sealed"
+                // filters out items where the user is the seller & when item has already been sold
                 self.items = fetchedItems.filter { $0.sellerUserId != currentUserEmail && $0.status == "available" }
                 DispatchQueue.main.async {
                     self.homePageView.tableViewHome.reloadData()

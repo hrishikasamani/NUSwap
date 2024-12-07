@@ -57,9 +57,9 @@ extension ProfileViewController {
         FirebaseItemCommands.fetchItems { result in
             switch result {
             case .success(let fetchedItems):
-                // filters transactions for sealed items
+                // filters transactions for items that have been sold
                 let relevantItems = fetchedItems.filter { item in
-                    item.status == "sealed" &&
+                    (item.status == "usingSealTheDeal" || item.status == "usingTopBidder") &&
                     (item.sellerUserId == currentUserEmail || item.buyerUserId == currentUserEmail)
                 }
 

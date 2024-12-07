@@ -40,12 +40,19 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.selectionStyle = .none
+        
         let isSeller = currentUserEmail == transaction.sellerUserId
-                cell.itemNameLabel.text = transaction.name
-                cell.sealedForLabel.text = isSeller ?
-                    "Sold for $\(transaction.topBidPrice ?? transaction.sealTheDealPrice)" :
-                    "Bought for $\(transaction.topBidPrice ?? transaction.sealTheDealPrice)"
-                cell.locationLabel.text = "Location: \(transaction.location)"
+        let price: String
+
+        if transaction.status == "usingSealTheDeal" {
+            price = "$\(transaction.sealTheDealPrice)"
+        } else {
+            price = "$\(transaction.topBidPrice ?? 0)"
+        }
+
+        cell.itemNameLabel.text = transaction.name
+        cell.sealedForLabel.text = isSeller ? "Sold for \(price)" : "Bought for \(price)"
+        cell.locationLabel.text = "Location: \(transaction.location)"
 
         return cell
     }
