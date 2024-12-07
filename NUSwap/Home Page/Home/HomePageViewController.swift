@@ -7,10 +7,12 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class HomePageViewController: UIViewController {
     var homePageView = HomePageView()
     var items: [ItemStruct] = []
+    var itemListener: ListenerRegistration?
 
     override func loadView() {
         view = homePageView
@@ -24,21 +26,40 @@ class HomePageViewController: UIViewController {
         
         homePageView.tableViewHome.delegate = self
         homePageView.tableViewHome.dataSource = self
-
+        
         // Observe new listing notifications
         NotificationCenter.default.addObserver(self, selector: #selector(handleNewListingNotification(_:)), name: NSNotification.Name("NewListingAdded"), object: nil)
-
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,
             action: #selector(addNewListing)
         )
+        
+        // Start real-time listener
+        itemListener = FirebaseItemCommands.fetchItemsRealTime { [weak self] result in
+            switch result {
+            case .success(let fetchedItems):
+                guard let self = self else { return }
+                self.items = fetchedItems.filter { $0.status == "available" && $0.sellerUserId != Auth.auth().currentUser?.email }
+                DispatchQueue.main.async {
+                    self.homePageView.tableViewHome.reloadData()
+                    self.updateEmptyList()
+                }
+            case .failure(let error):
+                print("Failed to fetch real-time updates: \(error.localizedDescription)")
+            }
+        }
     }
     
     // re-fetches data whenever view reloads
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchListings()
+    }
+    
+    deinit {
+            NotificationCenter.default.removeObserver(self)
     }
     
     @objc func addNewListing() {

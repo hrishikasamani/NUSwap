@@ -8,6 +8,31 @@
 import FirebaseFirestore
 
 struct FirebaseItemCommands {
+    
+    static func fetchItemsRealTime(completion: @escaping (Result<[ItemStruct], Error>) -> Void) -> ListenerRegistration {
+            let db = Firestore.firestore()
+            
+            // Set up a real-time listener for items collection
+            return db.collection("items").addSnapshotListener { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    completion(.success([]))
+                    return
+                }
+                
+                let items = documents.compactMap { doc -> ItemStruct? in
+                    try? doc.data(as: ItemStruct.self)
+                }
+                
+                completion(.success(items))
+            }
+        }
+
+    
     static func uploadNewItem(item: ItemStruct, imageURL: String, completion: @escaping (Result<Void, Error>) -> Void) {
         
         let db = Firestore.firestore()
