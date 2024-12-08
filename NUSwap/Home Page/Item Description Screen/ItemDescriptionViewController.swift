@@ -29,7 +29,6 @@ class ItemDescriptionViewController: UIViewController {
         // Update the view with the item details
         if let item = item {
             itemDescriptionScreen.itemNameLabel.text = item.name
-            itemDescriptionScreen.itemImage.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
             itemDescriptionScreen.topBidPriceLabel.text = "$\(String(describing: item.topBidPrice ?? item.basePrice))"
             itemDescriptionScreen.sealDealPriceLabel.text = "$\(item.sealTheDealPrice)"
             itemDescriptionScreen.locationLabel.text = item.location
@@ -38,6 +37,7 @@ class ItemDescriptionViewController: UIViewController {
             
             // Fetch and display the item image
             if let imageUrlString = item.imageURL, let imageUrl = URL(string: imageUrlString) {
+                
                 URLSession.shared.dataTask(with: imageUrl) { [weak self] data, response, error in
                     if let error = error {
                         print("Failed to load image: \(error.localizedDescription)")
@@ -51,6 +51,7 @@ class ItemDescriptionViewController: UIViewController {
 
                     // Update the UIImageView on the main thread
                     DispatchQueue.main.async {
+                        self?.itemDescriptionScreen.loadingLabel.isHidden = true
                         self?.itemDescriptionScreen.itemImage.image = fetchedImage
                     }
                 }.resume()

@@ -10,6 +10,7 @@ import UIKit
 class HomePageTableViewCell: UITableViewCell {
     
     var itemImageView: UIImageView!
+    var loadingLabel: UILabel!
     var itemNameLabel: UILabel!
     var itemLocationLabel: UILabel!
     var itemPriceLabel: UILabel!
@@ -30,13 +31,28 @@ class HomePageTableViewCell: UITableViewCell {
     
     // MARK: Setup UI Elements
     func setupItemImageView() {
+        // Initialize UIImageView
         itemImageView = UIImageView()
         itemImageView.translatesAutoresizingMaskIntoConstraints = false
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
         itemImageView.contentMode = .scaleAspectFit
         itemImageView.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+        
+        // Add UIImageView to contentView
         contentView.addSubview(itemImageView)
+        
+        // Initialize and configure UILabel
+        loadingLabel = UILabel()
+        loadingLabel.translatesAutoresizingMaskIntoConstraints = false
+        loadingLabel.text = "Loading..."
+        loadingLabel.textColor = .black
+        loadingLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        loadingLabel.textAlignment = .center
+        loadingLabel.isHidden = false // Initially visible
+        
+        // Add UILabel on top of the image view
+        contentView.addSubview(loadingLabel)
     }
     
     func setupItemNameLabel() {
@@ -86,11 +102,12 @@ class HomePageTableViewCell: UITableViewCell {
         itemPriceLabel.text = "Top Bid: $\(item.topBidPrice ?? item.basePrice)"
         itemSealPriceLabel.text = "Seal: $\(item.sealTheDealPrice)"
         itemDescriptionLabel.text = item.description
-        itemImageView.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
-
         
         // Check if the item has a valid image URL
         if let imageUrlString = item.imageURL, let imageUrl = URL(string: imageUrlString) {
+            // Show the loading label
+            loadingLabel.isHidden = false
+            
             // Fetch the image asynchronously
             URLSession.shared.dataTask(with: imageUrl) { [weak self] data, response, error in
                 if let error = error {
@@ -106,6 +123,7 @@ class HomePageTableViewCell: UITableViewCell {
                 // Update the UI on the main thread
                 DispatchQueue.main.async {
                     self?.itemImageView.image = fetchedImage
+                    self?.loadingLabel.isHidden = true // Hide the loading label once the image is loaded
                 }
             }.resume()
         }
@@ -119,6 +137,13 @@ class HomePageTableViewCell: UITableViewCell {
             itemImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             itemImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             itemImageView.heightAnchor.constraint(equalToConstant: 150), // Adjust height as needed
+            
+            // Loading label positioned towards the bottom of the image
+            loadingLabel.centerXAnchor.constraint(equalTo: itemImageView.centerXAnchor),
+            loadingLabel.bottomAnchor.constraint(equalTo: itemImageView.bottomAnchor, constant: -10),
+            loadingLabel.widthAnchor.constraint(equalTo: itemImageView.widthAnchor, multiplier: 0.9),
+            loadingLabel.heightAnchor.constraint(equalToConstant: 30),
+
             
             // Item name below the image
             itemNameLabel.topAnchor.constraint(equalTo: itemImageView.bottomAnchor, constant: 8),

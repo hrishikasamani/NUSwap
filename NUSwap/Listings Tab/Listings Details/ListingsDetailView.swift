@@ -13,6 +13,7 @@ class ListingsDetailView: UIView {
     var contentWrapper: UIScrollView!
     var itemNameLabel: UILabel!
     var itemImage: UIImageView!
+    var loadingLabel: UILabel!
     
     // section 2: top bid & seal the deal price
     var bidsVerticalDivider: UIView!
@@ -83,12 +84,21 @@ class ListingsDetailView: UIView {
     
     func setupItemImage() {
         itemImage = UIImageView()
-        itemImage.image = UIImage(systemName: "camera.fill")
         itemImage.contentMode = .scaleAspectFit
         itemImage.clipsToBounds = true
         itemImage.layer.cornerRadius = 10
         itemImage.translatesAutoresizingMaskIntoConstraints = false
+        itemImage.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
         contentWrapper.addSubview(itemImage)
+        
+        // Initialize the Loading Label (use the class-level variable)
+        loadingLabel = UILabel() // Corrected to use the class-level variable
+        loadingLabel.text = "Loading..."
+        loadingLabel.textColor = .black
+        loadingLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        loadingLabel.textAlignment = .center
+        loadingLabel.translatesAutoresizingMaskIntoConstraints = false
+        itemImage.addSubview(loadingLabel)
     }
     
     func setupBidSection() {
@@ -242,6 +252,11 @@ class ListingsDetailView: UIView {
             itemImage.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor, constant: -20),
             itemImage.widthAnchor.constraint(equalToConstant: 300),
             itemImage.heightAnchor.constraint(equalToConstant: 250),
+            
+            loadingLabel.centerXAnchor.constraint(equalTo: itemImage.centerXAnchor),
+            loadingLabel.bottomAnchor.constraint(equalTo: itemImage.bottomAnchor, constant: -10),
+            loadingLabel.widthAnchor.constraint(equalTo: itemImage.widthAnchor, multiplier: 0.9),
+            loadingLabel.heightAnchor.constraint(equalToConstant: 30),
             
             bidsVerticalDivider.centerXAnchor.constraint(equalTo: contentWrapper.centerXAnchor),
             bidsVerticalDivider.topAnchor.constraint(equalTo: itemImage.bottomAnchor, constant: 16),

@@ -31,6 +31,7 @@ class TransactionsTableView: UITableViewCell {
         itemImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.translatesAutoresizingMaskIntoConstraints = false
+        itemImageView.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
         contentView.addSubview(itemImageView)
     }
 

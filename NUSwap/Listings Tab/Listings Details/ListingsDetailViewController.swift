@@ -46,6 +46,7 @@ class ListingsDetailViewController: UIViewController {
                     
                     // Update the UIImageView on the main thread
                     DispatchQueue.main.async {
+                        self?.listingsDetailScreen.loadingLabel.isHidden = true
                         self?.listingsDetailScreen.itemImage.image = fetchedImage
                     }
                 }.resume()

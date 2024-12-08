@@ -39,7 +39,7 @@ class ListingsViewController: UIViewController {
     // re-fetches data whenever view reloads
     override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
-            fetchUserListings()
+//            fetchUserListings()
         }
     
     @objc func addNewListing() {

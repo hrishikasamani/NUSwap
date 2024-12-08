@@ -22,7 +22,6 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         let transaction = transactions[indexPath.row]
         let currentUserEmail = Auth.auth().currentUser?.email ?? ""
         
-        cell.itemImageView.image = UIImage(systemName: "photo")
         
         if let imageUrl = transaction.imageURL, let url = URL(string: imageUrl) {
             URLSession.shared.dataTask(with: url) { data, _, error in
