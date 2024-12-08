@@ -100,7 +100,7 @@ class ProfileView: UIView {
     
     func setupLabelTransactionDescription() {
         labelTransactionDescription = UILabel()
-        labelTransactionDescription.text = "includes purchases you’ve bought and sold"
+        labelTransactionDescription.text = "includes items you’ve bought and sold"
         labelTransactionDescription.font = UIFont.systemFont(ofSize: 14)
         labelTransactionDescription.textColor = .gray
         labelTransactionDescription.textAlignment = .center

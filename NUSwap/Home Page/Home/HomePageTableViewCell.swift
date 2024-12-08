@@ -65,7 +65,7 @@ class HomePageTableViewCell: UITableViewCell {
     func setupItemSealPriceLabel() {
         itemSealPriceLabel = UILabel()
         itemSealPriceLabel.translatesAutoresizingMaskIntoConstraints = false
-        itemSealPriceLabel.font = UIFont.systemFont(ofSize: 14)
+        itemSealPriceLabel.font = UIFont.systemFont(ofSize: 16)
         itemSealPriceLabel.textColor = .gray
         contentView.addSubview(itemSealPriceLabel)
     }

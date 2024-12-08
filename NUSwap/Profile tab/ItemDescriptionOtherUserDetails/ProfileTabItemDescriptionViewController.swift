@@ -20,6 +20,7 @@ class ProfileTabItemDescriptionViewController: UIViewController {
         self.view.backgroundColor = .white
 
         ThemeManager.applyDefaultTheme(to: profileTabItemDescriptionView)
+        self.navigationController?.navigationBar.tintColor = UIColor.label
         
         // Populate data into the view
         if let transaction = transaction {

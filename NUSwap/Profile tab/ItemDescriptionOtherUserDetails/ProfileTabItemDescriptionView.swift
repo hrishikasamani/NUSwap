@@ -38,7 +38,7 @@ class ProfileTabItemDescriptionView: UIView {
 
     func setupItemNameLabel() {
         itemNameLabel = UILabel()
-        itemNameLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        itemNameLabel.font = UIFont.boldSystemFont(ofSize: 22)
         itemNameLabel.translatesAutoresizingMaskIntoConstraints = false
         contentWrapper.addSubview(itemNameLabel)
     }
@@ -54,7 +54,7 @@ class ProfileTabItemDescriptionView: UIView {
 
     func setupPriceLabel() {
         priceLabel = UILabel()
-        priceLabel.font = UIFont.systemFont(ofSize: 20)
+        priceLabel.font = UIFont.systemFont(ofSize: 18)
         priceLabel.textColor = .gray
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         contentWrapper.addSubview(priceLabel)
@@ -69,7 +69,7 @@ class ProfileTabItemDescriptionView: UIView {
 
     func setupDescriptionLabel() {
         descriptionLabel = UILabel()
-        descriptionLabel.font = UIFont.systemFont(ofSize: 16)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 18)
         descriptionLabel.numberOfLines = 0
         descriptionLabel.lineBreakMode = .byWordWrapping
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +78,7 @@ class ProfileTabItemDescriptionView: UIView {
     
     func setupBuyerSellerDetailsLabel() {
         buyerSellerDetailsLabel = UILabel()
-        buyerSellerDetailsLabel.font = UIFont.systemFont(ofSize: 16)
+        buyerSellerDetailsLabel.font = UIFont.systemFont(ofSize: 18)
         buyerSellerDetailsLabel.numberOfLines = 0
         buyerSellerDetailsLabel.lineBreakMode = .byWordWrapping
         buyerSellerDetailsLabel.textColor = .darkGray
@@ -109,7 +109,7 @@ class ProfileTabItemDescriptionView: UIView {
 
             descriptionLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 20),
             descriptionLabel.leadingAnchor.constraint(equalTo: contentWrapper.leadingAnchor, constant: 20),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentWrapper.trailingAnchor, constant: -20),
+            descriptionLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
             descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentWrapper.bottomAnchor, constant: -20),
             
             buyerSellerDetailsLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
