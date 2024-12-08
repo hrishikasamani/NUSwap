@@ -59,5 +59,13 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        // Navigate to ProfileTabItemDescriptionViewController
+        let selectedTransaction = transactions[indexPath.row]
+        let profileTabItemDescriptionVC = ProfileTabItemDescriptionViewController()
+        profileTabItemDescriptionVC.transaction = selectedTransaction // Pass the selected transaction
+        
+        navigationController?.pushViewController(profileTabItemDescriptionVC, animated: true)
     }
+
 }
