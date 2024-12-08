@@ -26,6 +26,8 @@ class ListingsViewController: UIViewController {
         ListingsScreen.tableViewListings.delegate = self
         ListingsScreen.tableViewListings.dataSource = self
         
+        ThemeManager.applyDefaultTheme(to: ListingsScreen)
+        
         // Observe new listing notifications
         NotificationCenter.default.addObserver(self, selector: #selector(handleNewListingNotification(_:)), name: NSNotification.Name("NewListingAdded"), object: nil)
         
@@ -38,9 +40,10 @@ class ListingsViewController: UIViewController {
     
     // re-fetches data whenever view reloads
     override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            fetchUserListings()
-        }
+        super.viewWillAppear(animated)
+        ThemeManager.applyDefaultTheme(to: ListingsScreen)
+        fetchUserListings()
+    }
     
     @objc func addNewListing() {
         let newListingVC = NewListingViewController()

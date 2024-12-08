@@ -45,7 +45,7 @@ extension ViewController{
             .first(where: { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }) {
             
             if let window = windowScene.windows.first {
-                window.rootViewController = UINavigationController(rootViewController: homePage)
+                window.rootViewController = homePage
                 window.makeKeyAndVisible()
             }
         }

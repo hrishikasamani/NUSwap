@@ -20,12 +20,16 @@ class ItemDescriptionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+
+        ThemeManager.applyDefaultTheme(to: itemDescriptionScreen)
+        restoreButtonAppearance()
+        restoreDividersAndTextboxesAppearance()
         
         // Button actions
         itemDescriptionScreen.placeBidButton.addTarget(self, action: #selector(placeNewBidAction), for: .touchUpInside)
         
         itemDescriptionScreen.sealDealButton.addTarget(self, action: #selector(sealTheDealAction), for: .touchUpInside)
-
+        
         // Update the view with the item details
         if let item = item {
             itemDescriptionScreen.itemNameLabel.text = item.name
@@ -56,6 +60,21 @@ class ItemDescriptionViewController: UIViewController {
                 }.resume()
             }
         }
+    }
+    
+    func restoreButtonAppearance() {
+        itemDescriptionScreen.placeBidButton.backgroundColor = UIColor(red: 0/255, green: 153/255, blue: 0/255, alpha: 1)
+        itemDescriptionScreen.placeBidButton.setTitleColor(.white, for: .normal)
+
+        itemDescriptionScreen.sealDealButton.backgroundColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
+        itemDescriptionScreen.sealDealButton.setTitleColor(.white, for: .normal)
+    }
+    
+    func restoreDividersAndTextboxesAppearance() {
+        itemDescriptionScreen.bidsVerticalDivider.backgroundColor = .lightGray
+        itemDescriptionScreen.locationDivider.backgroundColor = .lightGray
+        itemDescriptionScreen.descriptionDivider.backgroundColor = .lightGray
+        itemDescriptionScreen.bidsHorizontalDivider.backgroundColor = .lightGray
     }
     
     // MARK: - Place new bid funtionality

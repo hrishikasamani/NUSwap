@@ -27,12 +27,15 @@ class BiddingsViewController: UIViewController {
         BiddingsScreen.tableViewBiddings.delegate = self
         BiddingsScreen.tableViewBiddings.dataSource = self
         
+        ThemeManager.applyDefaultTheme(to: BiddingsScreen)
+        
         // Observe new listing notifications
         NotificationCenter.default.addObserver(self, selector: #selector(handleNewBiddingNotification(_:)), name: NSNotification.Name("NewBiddingAdded"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        ThemeManager.applyDefaultTheme(to: BiddingsScreen)
         fetchUserBiddings()
     }
     

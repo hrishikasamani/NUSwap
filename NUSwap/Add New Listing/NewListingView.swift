@@ -66,8 +66,11 @@ class NewListingView: UIView, UITextFieldDelegate {
         productName = UITextField()
         productName.placeholder = "Name of product"
         productName.borderStyle = .roundedRect
+        productName.layer.borderColor = UIColor.lightGray.cgColor
+        productName.layer.borderWidth = 0.5
+        productName.layer.cornerRadius = 5.0
         productName.translatesAutoresizingMaskIntoConstraints = false
-        productName.delegate = self // Set the delegate
+        productName.delegate = self
         contentView.addSubview(productName)
     }
 
@@ -117,6 +120,9 @@ class NewListingView: UIView, UITextFieldDelegate {
         priceTextField.placeholder = "Put amount in $"
         priceTextField.keyboardType = .decimalPad
         priceTextField.borderStyle = .roundedRect
+        priceTextField.layer.borderColor = UIColor.lightGray.cgColor
+        priceTextField.layer.borderWidth = 0.5
+        priceTextField.layer.cornerRadius = 5.0
         priceTextField.translatesAutoresizingMaskIntoConstraints = false
         priceTextField.delegate = self
         contentView.addSubview(priceTextField)
@@ -135,6 +141,9 @@ class NewListingView: UIView, UITextFieldDelegate {
         sealDealTextField.placeholder = "Enter amount in $"
         sealDealTextField.keyboardType = .decimalPad
         sealDealTextField.borderStyle = .roundedRect
+        sealDealTextField.layer.borderColor = UIColor.lightGray.cgColor
+        sealDealTextField.layer.borderWidth = 0.5
+        sealDealTextField.layer.cornerRadius = 5.0
         sealDealTextField.translatesAutoresizingMaskIntoConstraints = false
         sealDealTextField.delegate = self
         contentView.addSubview(sealDealTextField)
@@ -152,6 +161,9 @@ class NewListingView: UIView, UITextFieldDelegate {
         locationTextField = UITextField()
         locationTextField.placeholder = "Enter location"
         locationTextField.borderStyle = .roundedRect
+        locationTextField.layer.borderColor = UIColor.lightGray.cgColor
+        locationTextField.layer.borderWidth = 0.5
+        locationTextField.layer.cornerRadius = 5.0
         locationTextField.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(locationTextField)
     }
@@ -170,7 +182,7 @@ class NewListingView: UIView, UITextFieldDelegate {
         detailsTextField.textColor = .lightGray
         detailsTextField.font = UIFont.systemFont(ofSize: 20)
         detailsTextField.layer.borderColor = UIColor.lightGray.cgColor
-        detailsTextField.layer.borderWidth = 1.0
+        detailsTextField.layer.borderWidth = 0.5
         detailsTextField.layer.cornerRadius = 5.0
         detailsTextField.isScrollEnabled = true
         detailsTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -180,10 +192,9 @@ class NewListingView: UIView, UITextFieldDelegate {
     func setupListItemButton() {
         listItemButton = UIButton(type: .system)
         listItemButton.setTitle("List your item", for: .normal)
-        listItemButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        listItemButton.backgroundColor = .systemBlue
+        listItemButton.backgroundColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
         listItemButton.setTitleColor(.white, for: .normal)
-        listItemButton.layer.cornerRadius = 10
+        listItemButton.layer.cornerRadius = 8
         listItemButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(listItemButton)
     }

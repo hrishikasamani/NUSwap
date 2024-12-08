@@ -20,6 +20,10 @@ class ListingsDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ThemeManager.applyDefaultTheme(to: listingsDetailScreen)
+        restoreButtonAppearance()
+        restoreDividersAndTextboxesAppearance()
+        
         // updates view with the item details
         if let item = item {
             listingsDetailScreen.itemNameLabel.text = item.name
@@ -57,6 +61,22 @@ class ListingsDetailViewController: UIViewController {
         
         listingsDetailScreen.deleteListingButton.addTarget(self, action: #selector(deleteListingAction), for: .touchUpInside)
     }
+    
+    func restoreButtonAppearance() {
+        listingsDetailScreen.sellToTopBidButton.backgroundColor = UIColor(red: 0/255, green: 153/255, blue: 0/255, alpha: 1)
+        listingsDetailScreen.sellToTopBidButton.setTitleColor(.white, for: .normal)
+
+        listingsDetailScreen.deleteListingButton.backgroundColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
+        listingsDetailScreen.deleteListingButton.setTitleColor(.white, for: .normal)
+    }
+    
+    func restoreDividersAndTextboxesAppearance() {
+        listingsDetailScreen.bidsVerticalDivider.backgroundColor = .lightGray
+        listingsDetailScreen.locationDivider.backgroundColor = .lightGray
+        listingsDetailScreen.descriptionDivider.backgroundColor = .lightGray
+        listingsDetailScreen.bidsHorizontalDivider.backgroundColor = .lightGray
+    }
+
     
     // sell item to top bid button tapped
     @objc func sellToTopBidAction() {

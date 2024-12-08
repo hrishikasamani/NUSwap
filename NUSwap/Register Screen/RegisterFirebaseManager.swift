@@ -87,8 +87,23 @@ extension RegisterViewController{
                let homeVC = homeNavController.viewControllers.first as? HomePageViewController {
                 homeVC.fetchListings()
             }
+
+        
+
+        
+
+        // Find a UIWindowScene in the foreground state
+        if let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }) {
             
-            navigationController?.setViewControllers([homePage], animated: true)
+            if let window = windowScene.windows.first {
+                window.rootViewController = homePage
+                window.makeKeyAndVisible()
+            }
+        }
+        
+        
     }
     
     func saveUserToFirestore(name: String, email: String, phone: String) {

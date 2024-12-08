@@ -150,7 +150,7 @@ class ItemDescriptionView: UIView, UITextFieldDelegate {
     func setupLocationImage() {
         locationImage = UIImageView()
         locationImage.image = UIImage(systemName: "mappin.and.ellipse")
-        locationImage.tintColor = .black
+        locationImage.tintColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
         locationImage.translatesAutoresizingMaskIntoConstraints = false
         contentWrapper.addSubview(locationImage)
     }
@@ -213,6 +213,9 @@ class ItemDescriptionView: UIView, UITextFieldDelegate {
     func setupNewBidTextField() {
         newBidTextField = UITextField()
         newBidTextField.borderStyle = .roundedRect
+        newBidTextField.layer.borderColor = UIColor.lightGray.cgColor
+        newBidTextField.layer.borderWidth = 1.0  // Border thickness
+        newBidTextField.layer.cornerRadius = 5.0
         newBidTextField.placeholder = "Amount"
         newBidTextField.textAlignment = .center
         newBidTextField.keyboardType = .numberPad

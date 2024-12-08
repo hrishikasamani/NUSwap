@@ -16,7 +16,7 @@ class ProfileViewController: UIViewController {
     //MARK: creating instance of DisplayView...
     let profileScreen = ProfileView()
     let childProgressView = ProgressSpinnerViewController()
-    
+    var transactionListener: ListenerRegistration?
     var transactions: [ItemStruct] = []
     
     //MARK: patch the view of the controller to the DisplayView...
@@ -56,11 +56,55 @@ class ProfileViewController: UIViewController {
         
         fetchUserProfile()
         fetchTransactions()
+        callTransactionListener()
         
         // Set the default theme based on saved preference
         let isDarkMode = UserDefaults.standard.bool(forKey: "isDarkMode")
         profileScreen.toggle.selectedSegmentIndex = isDarkMode ? 1 : 0
         applyTheme(isDarkMode: isDarkMode)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        applyDefaultTheme()
+        fetchUserProfile()
+        fetchTransactions()
+    }
+    
+    func applyDefaultTheme() {
+        let isDarkMode = UserDefaults.standard.bool(forKey: "isDarkMode")
+        profileScreen.toggle.selectedSegmentIndex = isDarkMode ? 1 : 0
+        applyTheme(isDarkMode: isDarkMode)
+    }
+    
+    deinit {
+        transactionListener?.remove()
+    }
+
+func callTransactionListener() {
+        guard let currentUserEmail = Auth.auth().currentUser?.email else {
+            print("User not logged in")
+            return
+        }
+
+        transactionListener = FirebaseItemCommands.fetchItemsRealTime { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let fetchedItems):
+                let relevantItems = fetchedItems.filter { item in
+                    (item.status == "usingSealTheDeal" || item.status == "usingTopBidder") &&
+                    (item.sellerUserId == currentUserEmail || item.buyerUserId == currentUserEmail)
+                }
+
+                DispatchQueue.main.async {
+                    self.transactions = relevantItems
+                    self.profileScreen.transactionsTableView.reloadData()
+                    self.updateEmptyList()
+                }
+            case .failure(let error):
+                print("Failed to fetch real-time transactions: \(error.localizedDescription)")
+            }
+        }
     }
     
     @objc func onToggleChanged(_ sender: UISegmentedControl) {
@@ -75,9 +119,15 @@ class ProfileViewController: UIViewController {
             .first?.windows.first {
             window.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
         }
-        // Change the navigation bar's appearance
-        UINavigationBar.appearance().barStyle = isDarkMode ? .black : .default
-        UINavigationBar.appearance().tintColor = isDarkMode ? .white : .black
+        
+        navigationController?.navigationBar.barStyle = isDarkMode ? .black : .default
+        navigationController?.navigationBar.tintColor = isDarkMode ? .black : .white
+        
+        // Set the title color
+        let titleColor = isDarkMode ? UIColor.white : UIColor.black
+        navigationController?.navigationBar.titleTextAttributes = [
+            .foregroundColor: titleColor
+        ]
         
         profileScreen.backgroundColor = isDarkMode ? UIColor.black : UIColor.white
         

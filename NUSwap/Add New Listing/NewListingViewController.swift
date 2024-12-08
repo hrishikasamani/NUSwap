@@ -39,6 +39,9 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         newListingScreen.productName.delegate = self
         newListingScreen.locationTextField.delegate = self
         
+        ThemeManager.applyDefaultTheme(to: newListingScreen)
+        restoreButtonAppearance()
+        
         // Button actions
         newListingScreen.buttonTakePhoto.addTarget(self, action: #selector(showPhotoOptions), for: .touchUpInside)
         newListingScreen.listItemButton.addTarget(self, action: #selector(addListing), for: .touchUpInside)
@@ -57,6 +60,11 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         // remove observers
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func restoreButtonAppearance() {
+        newListingScreen.listItemButton.backgroundColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
+        newListingScreen.listItemButton.setTitleColor(.white, for: .normal)
     }
     
     // make sure keyboard doesn't cover text fields
