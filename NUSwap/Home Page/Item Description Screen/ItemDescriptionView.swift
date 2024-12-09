@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ItemDescriptionView: UIView {
+class ItemDescriptionView: UIView, UITextFieldDelegate {
     
     // section 1: title & image
     var contentWrapper: UIScrollView!
@@ -150,7 +150,7 @@ class ItemDescriptionView: UIView {
     func setupLocationImage() {
         locationImage = UIImageView()
         locationImage.image = UIImage(systemName: "mappin.and.ellipse")
-        locationImage.tintColor = .black
+        locationImage.tintColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
         locationImage.translatesAutoresizingMaskIntoConstraints = false
         contentWrapper.addSubview(locationImage)
     }
@@ -213,10 +213,14 @@ class ItemDescriptionView: UIView {
     func setupNewBidTextField() {
         newBidTextField = UITextField()
         newBidTextField.borderStyle = .roundedRect
+        newBidTextField.layer.borderColor = UIColor.lightGray.cgColor
+        newBidTextField.layer.borderWidth = 1.0  // Border thickness
+        newBidTextField.layer.cornerRadius = 5.0
         newBidTextField.placeholder = "Amount"
         newBidTextField.textAlignment = .center
         newBidTextField.keyboardType = .numberPad
         newBidTextField.translatesAutoresizingMaskIntoConstraints = false
+        newBidTextField.delegate = self
         contentWrapper.addSubview(newBidTextField)
     }
     
@@ -337,5 +341,34 @@ class ItemDescriptionView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+
+        if textField == newBidTextField {
+            // Ensure only valid characters (numbers and a decimal point)
+            let allowedCharacters = CharacterSet(charactersIn: "0123456789.")
+            if string.rangeOfCharacter(from: allowedCharacters.inverted) != nil {
+                return false
+            }
+            
+            // Ensure only one decimal point
+            if updatedText.filter({ $0 == "." }).count > 1 {
+                return false
+            }
+            
+            // Restrict to two decimal places
+            if let decimalIndex = updatedText.firstIndex(of: ".") {
+                let decimalPart = updatedText[decimalIndex...].dropFirst() // Get characters after "."
+                if decimalPart.count > 2 {
+                    return false
+                }
+            }
+        }
+        
+        return true
     }
 }

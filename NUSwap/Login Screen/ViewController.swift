@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseAuth
 
 class ViewController: UIViewController {
 
@@ -15,6 +16,12 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Check if a user is already logged in
+        if let currentUser = Auth.auth().currentUser {
+            // Navigate to the homepage if the user is logged in
+            navigateToHomePage()
+        }
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboardOnTap))
         tapRecognizer.cancelsTouchesInView = false

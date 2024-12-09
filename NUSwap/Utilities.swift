@@ -7,6 +7,6 @@
 
 import Foundation
 class Utilities{
-    static let types = ["Groceries", "Furniture", "Clothes", "Electronics"]
+    static let types = ["Groceries", "Furniture", "Clothes", "Electronics", "Beauty Products", "Stationery","Cutlery", "Other"]
 }
 

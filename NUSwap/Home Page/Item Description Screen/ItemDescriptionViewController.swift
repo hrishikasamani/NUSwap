@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class ItemDescriptionViewController: UIViewController {
     var itemDescriptionScreen = ItemDescriptionView()
@@ -19,24 +20,61 @@ class ItemDescriptionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        
-        
+
+        ThemeManager.applyDefaultTheme(to: itemDescriptionScreen)
+        restoreButtonAppearance()
+        restoreDividersAndTextboxesAppearance()
         
         // Button actions
         itemDescriptionScreen.placeBidButton.addTarget(self, action: #selector(placeNewBidAction), for: .touchUpInside)
         
         itemDescriptionScreen.sealDealButton.addTarget(self, action: #selector(sealTheDealAction), for: .touchUpInside)
-
+        
         // Update the view with the item details
         if let item = item {
             itemDescriptionScreen.itemNameLabel.text = item.name
-            itemDescriptionScreen.itemImage.image = UIImage(systemName: "photo") // Placeholder image
-            itemDescriptionScreen.topBidPriceLabel.text = "$\(String(describing: item.topBid ?? 0))"
+            itemDescriptionScreen.itemImage.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+            itemDescriptionScreen.topBidPriceLabel.text = "$\(String(describing: item.topBidPrice ?? item.basePrice))"
             itemDescriptionScreen.sealDealPriceLabel.text = "$\(item.sealTheDealPrice)"
             itemDescriptionScreen.locationLabel.text = item.location
             itemDescriptionScreen.descriptionDetailsLabel.text = item.description
             itemDescriptionScreen.sealDealButton.setTitle("Seal the Deal for $\(item.sealTheDealPrice)", for: .normal)
+            
+            // Fetch and display the item image
+            if let imageUrlString = item.imageURL, let imageUrl = URL(string: imageUrlString) {
+                URLSession.shared.dataTask(with: imageUrl) { [weak self] data, response, error in
+                    if let error = error {
+                        print("Failed to load image: \(error.localizedDescription)")
+                        return
+                    }
+
+                    guard let data = data, let fetchedImage = UIImage(data: data) else {
+                        print("Failed to decode image data")
+                        return
+                    }
+
+                    // Update the UIImageView on the main thread
+                    DispatchQueue.main.async {
+                        self?.itemDescriptionScreen.itemImage.image = fetchedImage
+                    }
+                }.resume()
+            }
         }
+    }
+    
+    func restoreButtonAppearance() {
+        itemDescriptionScreen.placeBidButton.backgroundColor = UIColor(red: 0/255, green: 153/255, blue: 0/255, alpha: 1)
+        itemDescriptionScreen.placeBidButton.setTitleColor(.white, for: .normal)
+
+        itemDescriptionScreen.sealDealButton.backgroundColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
+        itemDescriptionScreen.sealDealButton.setTitleColor(.white, for: .normal)
+    }
+    
+    func restoreDividersAndTextboxesAppearance() {
+        itemDescriptionScreen.bidsVerticalDivider.backgroundColor = .lightGray
+        itemDescriptionScreen.locationDivider.backgroundColor = .lightGray
+        itemDescriptionScreen.descriptionDivider.backgroundColor = .lightGray
+        itemDescriptionScreen.bidsHorizontalDivider.backgroundColor = .lightGray
     }
     
     // MARK: - Place new bid funtionality
@@ -49,6 +87,11 @@ class ItemDescriptionViewController: UIViewController {
             
             // update the bids collection
             addNewBidForItem(documentID: item?.itemId ?? "missing", newBidPrice: newBidAmount ?? 0, userId: Auth.auth().currentUser?.email ?? "missing")
+            
+            if var updatedItem = item {
+                updatedItem.topBidPrice = newBidAmount // Update the top bid locally
+                NotificationCenter.default.post(name: NSNotification.Name("NewBiddingAdded"), object: updatedItem.itemId)
+            }
         }
         else {
             showErrorAlert(message: "Invalid bid amount.")
@@ -56,13 +99,8 @@ class ItemDescriptionViewController: UIViewController {
         
     }
     
-    // MARK: - Seal the Deal funtionality
-    @objc func sealTheDealAction() {
-        sealTheDealForItem(documentID: item?.itemId ?? "missing", userId: Auth.auth().currentUser?.email ?? "missing")
-        
-    }
-    
     func sealTheDealOnScreen(){
+        //showActivityIndicator()
         UIView.animate(withDuration: 0.2, animations: {
             self.itemDescriptionScreen.sealDealPriceLabel.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
         }) { _ in
@@ -71,7 +109,7 @@ class ItemDescriptionViewController: UIViewController {
             }
         }
         itemDescriptionScreen.sealDealButton.isEnabled = false
-        itemDescriptionScreen.sealDealButton.setTitle("ALREADY YOURS!", for: .normal)
+        itemDescriptionScreen.sealDealButton.setTitle("NOW YOURS!", for: .normal)
         // navigate to the Biddings screen AFTER sealthedeal is success??
     }
     
@@ -79,7 +117,7 @@ class ItemDescriptionViewController: UIViewController {
         // Update the text fields
         itemDescriptionScreen.topBidPriceLabel.text = String("$\(newBidAmount)")
         itemDescriptionScreen.newBidTextField.text = ""
-        item?.topBid = newBidAmount
+        item?.topBidPrice = newBidAmount
 
         
         UIView.animate(withDuration: 0.2, animations: {
@@ -93,7 +131,7 @@ class ItemDescriptionViewController: UIViewController {
 
     
     func validateNewBid(newBidAmount: Double) -> Bool {
-        if newBidAmount <= item?.basePrice ?? 0 || newBidAmount <= item?.topBid ?? 0{
+        if newBidAmount <= item?.basePrice ?? 0 || newBidAmount <= item?.topBidPrice ?? 0{
             return false
         }
         

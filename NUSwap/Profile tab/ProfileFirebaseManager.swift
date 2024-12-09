@@ -11,6 +11,7 @@ import FirebaseAuth
 
 extension ProfileViewController {
     func fetchUserProfile() {
+        showActivityIndicator()
         guard let userEmail = Auth.auth().currentUser?.email else {
             showErrorAlert(message: "User email not found. Please log in again.")
             return
@@ -37,8 +38,40 @@ extension ProfileViewController {
                 self.profileScreen.labelName.text = "Hi \(name)!"
                 self.profileScreen.labelEmail.text = "Email: \(email)"
                 self.profileScreen.labelPhone.text = "Phone: \(phone)"
+                self.hideActivityIndicator()
             } else {
+                self.hideActivityIndicator()
                 self.showErrorAlert(message: "Invalid user data.")
+                
+            }
+        }
+    }
+    
+    @objc func fetchTransactions() {
+        showActivityIndicator()
+        guard let currentUserEmail = Auth.auth().currentUser?.email else {
+            print("User not logged in")
+            return
+        }
+
+        FirebaseItemCommands.fetchItems { result in
+            switch result {
+            case .success(let fetchedItems):
+                // filters transactions for items that have been sold
+                let relevantItems = fetchedItems.filter { item in
+                    (item.status == "usingSealTheDeal" || item.status == "usingTopBidder") &&
+                    (item.sellerUserId == currentUserEmail || item.buyerUserId == currentUserEmail)
+                }
+
+                DispatchQueue.main.async {
+                    self.transactions = relevantItems
+                    self.profileScreen.transactionsTableView.reloadData()
+                    self.updateEmptyList()
+                    self.hideActivityIndicator()
+                }
+            case .failure(let error):
+                self.hideActivityIndicator()
+                print("Failed to fetch transactions: \(error.localizedDescription)")
             }
         }
     }

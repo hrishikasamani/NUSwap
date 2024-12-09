@@ -35,7 +35,7 @@ class HomePageTableViewCell: UITableViewCell {
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
         itemImageView.contentMode = .scaleAspectFit
-        itemImageView.image = UIImage(systemName: "photo") // Placeholder image
+        itemImageView.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
         contentView.addSubview(itemImageView)
     }
     
@@ -65,7 +65,7 @@ class HomePageTableViewCell: UITableViewCell {
     func setupItemSealPriceLabel() {
         itemSealPriceLabel = UILabel()
         itemSealPriceLabel.translatesAutoresizingMaskIntoConstraints = false
-        itemSealPriceLabel.font = UIFont.systemFont(ofSize: 14)
+        itemSealPriceLabel.font = UIFont.systemFont(ofSize: 16)
         itemSealPriceLabel.textColor = .gray
         contentView.addSubview(itemSealPriceLabel)
     }
@@ -83,10 +83,32 @@ class HomePageTableViewCell: UITableViewCell {
     func configure(with item: ItemStruct) {
         itemNameLabel.text = item.name
         itemLocationLabel.text = item.location
-        itemPriceLabel.text = "$\(item.basePrice)"
+        itemPriceLabel.text = "Top Bid: $\(item.topBidPrice ?? item.basePrice)"
         itemSealPriceLabel.text = "Seal: $\(item.sealTheDealPrice)"
         itemDescriptionLabel.text = item.description
-        itemImageView.image = UIImage(systemName: "photo") // Placeholder image
+        itemImageView.image = UIImage(systemName: "photo")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+
+        
+        // Check if the item has a valid image URL
+        if let imageUrlString = item.imageURL, let imageUrl = URL(string: imageUrlString) {
+            // Fetch the image asynchronously
+            URLSession.shared.dataTask(with: imageUrl) { [weak self] data, response, error in
+                if let error = error {
+                    print("Failed to load image: \(error.localizedDescription)")
+                    return
+                }
+
+                guard let data = data, let fetchedImage = UIImage(data: data) else {
+                    print("Failed to decode image data")
+                    return
+                }
+
+                // Update the UI on the main thread
+                DispatchQueue.main.async {
+                    self?.itemImageView.image = fetchedImage
+                }
+            }.resume()
+        }
     }
     
     // MARK: Setup Constraints

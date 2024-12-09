@@ -12,13 +12,21 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
     
     var newListingScreen = NewListingView()
     var selectedType = "Electronics"
-
+    var selectedImage: UIImage?
+    var uploadedImageURL: String? // Declare a local variable to store the URL
+    let childProgressView = ProgressSpinnerViewController()
+    
     override func loadView() {
         view = newListingScreen
         newListingScreen.categoryPickerView.dataSource = self
         newListingScreen.categoryPickerView.delegate = self
+        newListingScreen.detailsTextField.delegate = self
+        newListingScreen.productName.delegate = self
+        newListingScreen.locationTextField.delegate = self
+        newListingScreen.sealDealTextField.delegate = self
+        newListingScreen.priceTextField.delegate = self
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -28,6 +36,11 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         newListingScreen.categoryPickerView.dataSource = self
         newListingScreen.categoryPickerView.delegate = self
         newListingScreen.detailsTextField.delegate = self
+        newListingScreen.productName.delegate = self
+        newListingScreen.locationTextField.delegate = self
+        
+        ThemeManager.applyDefaultTheme(to: newListingScreen)
+        restoreButtonAppearance()
         
         // Button actions
         newListingScreen.buttonTakePhoto.addTarget(self, action: #selector(showPhotoOptions), for: .touchUpInside)
@@ -49,6 +62,11 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    func restoreButtonAppearance() {
+        newListingScreen.listItemButton.backgroundColor = UIColor(red: 191/255, green: 0/255, blue: 0/255, alpha: 1)
+        newListingScreen.listItemButton.setTitleColor(.white, for: .normal)
+    }
+    
     // make sure keyboard doesn't cover text fields
     @objc func keyboardWillShow(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
@@ -60,7 +78,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         newListingScreen.scrollView.contentInset = contentInset
         newListingScreen.scrollView.scrollIndicatorInsets = contentInset
     }
-
+    
     @objc func keyboardWillHide(_ notification: Notification) {
         let contentInset = UIEdgeInsets.zero
         newListingScreen.scrollView.contentInset = contentInset
@@ -72,7 +90,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
         let frame = view.convert(view.bounds, to: scrollView)
         scrollView.scrollRectToVisible(frame, animated: true)
     }
-
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         scrollToView(view: textField)
     }
@@ -85,7 +103,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
             textView.textColor = .black
         }
     }
-
+    
     // when description box is blank
     @objc func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
@@ -93,28 +111,28 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
             textView.textColor = .lightGray
         }
     }
-
+    
     // MARK: - Show Photo Options
     @objc func showPhotoOptions() {
         let alert = UIAlertController(title: "Upload Photo", message: "Choose a photo from gallery or take a new one.", preferredStyle: .actionSheet)
-
+        
         let galleryAction = UIAlertAction(title: "Gallery", style: .default) { _ in
             self.openGallery()
         }
-
+        
         let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
             self.openCamera()
         }
-
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-
+        
         alert.addAction(galleryAction)
         alert.addAction(cameraAction)
         alert.addAction(cancelAction)
-
+        
         present(alert, animated: true)
     }
-
+    
     func openGallery() {
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             let imagePicker = UIImagePickerController()
@@ -125,7 +143,7 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
             showErrorAlert(message: "Gallery is not available.")
         }
     }
-
+    
     func openCamera() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let imagePicker = UIImagePickerController()
@@ -136,13 +154,15 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
             showErrorAlert(message: "Camera is not available.")
         }
     }
-
+    
     // MARK: - Image Picker Delegate Methods
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true) {
             if let selectedImage = info[.originalImage] as? UIImage {
+                self.selectedImage = selectedImage
                 self.newListingScreen.buttonTakePhoto.setImage(selectedImage, for: .normal)
                 self.newListingScreen.buttonTakePhoto.contentMode = .scaleAspectFit
+                
             }
         }
     }
@@ -152,30 +172,99 @@ class NewListingViewController: UIViewController, UIImagePickerControllerDelegat
     }
     // hide keyboard
     @objc func hideKeyboardOnTap() {
-            view.endEditing(true)
-        }
-        
+        view.endEditing(true)
+    }
+    
     // MARK: - Error Alert
     func showErrorAlert(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-
+    
     // MARK: - UIPickerView DataSource and Delegate
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return Utilities.types.count
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return Utilities.types[row]
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedType = Utilities.types[row]
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // Define the character limit
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        // Define character limits based on the text field
+        let maxLength: Int
+        if textField == newListingScreen.productName {
+            maxLength = 30 // Max length for productName
+        } else if textField == newListingScreen.detailsTextField {
+            maxLength = 200 // Max length for detailsTextField
+        } else if textField == newListingScreen.priceTextField || textField == newListingScreen.sealDealTextField {
+            // Max length for priceTextField and sealDealTextField
+            maxLength = 12
+        } else {
+            maxLength = 30 // Default max length if needed
+        }
+        
+        // General character limit check
+        if updatedText.count > maxLength {
+            return false
+        }
+        
+        // Special validation for priceTextField and sealDealTextField
+        if textField == newListingScreen.priceTextField || textField == newListingScreen.sealDealTextField {
+            // Ensure only valid characters are entered
+            let allowedCharacters = CharacterSet(charactersIn: "0123456789.")
+            if string.rangeOfCharacter(from: allowedCharacters.inverted) != nil {
+                return false
+            }
+            
+            // Allow empty text
+            if updatedText.isEmpty { return true }
+            
+            // Ensure only one decimal point
+            if updatedText.filter({ $0 == "." }).count > 1 {
+                return false
+            }
+            
+            // Ensure total digits (excluding the decimal point) do not exceed 12
+            let digitCount = updatedText.filter { $0.isWholeNumber }.count
+            if digitCount > 12 {
+                return false
+            }
+            
+            // Restrict to two decimal places
+            if let decimalIndex = updatedText.firstIndex(of: ".") {
+                let decimalPart = updatedText[decimalIndex...].dropFirst() // Get characters after "."
+                if decimalPart.count > 2 {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if textView == newListingScreen.detailsTextField {
+            let currentText = textView.text ?? ""
+            guard let stringRange = Range(range, in: currentText) else { return false }
+            let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
+            return updatedText.count <= 200
+        }
+        return true
+    }
+
 }

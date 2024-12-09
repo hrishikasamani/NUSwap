@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RegisterViewController: UIViewController {
+class RegisterViewController: UIViewController, UITextFieldDelegate {
 
     //MARK: initializing the First Screen View...
     let registerScreen = RegisterView()
@@ -22,9 +22,16 @@ class RegisterViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboardOnTap))
         tapRecognizer.cancelsTouchesInView = false
         view.addGestureRecognizer(tapRecognizer)
+        
+        registerScreen.textFieldName.delegate = self
+        registerScreen.textFieldEmail.delegate = self
+        registerScreen.textFieldPhone.delegate = self
+        registerScreen.textFieldPassword.delegate = self
+        registerScreen.textFieldVerifyPassword.delegate = self
         
         registerScreen.buttonLogin.addTarget(self, action: #selector(onButtonClickLoginTapped), for: .touchUpInside)
         registerScreen.buttonRegister.addTarget(self, action: #selector(onButtonClickRegisterTapped), for: .touchUpInside)
@@ -80,10 +87,6 @@ class RegisterViewController: UIViewController {
         }
         
         registerUserAPI(name: name, email: email, phone: phone, password: password)
-//        // Register success: Navigate to Home Page
-//        let homeVC = MainTabBarController()
-//        homeVC.modalPresentationStyle = .fullScreen
-//        present(homeVC, animated: true, completion: nil)
     }
     
     func registerUserAPI(name: String, email: String, phone: String, password: String){
@@ -105,4 +108,18 @@ class RegisterViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
     }
+    
+    // check for max characters in each field
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        if textField == registerScreen.textFieldName {
+            return updatedText.count <= 20 // max 20 characters in name field
+        } else {
+            return updatedText.count <= 30 // max 30 characters for the rest of the fields
+        }
+    }
+
 }
